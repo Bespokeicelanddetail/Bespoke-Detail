@@ -1,0 +1,1579 @@
+<!doctype html>
+<html lang="is">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0d5b6c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bespoke Detail">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Bespoke Detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: workshop job board — a quiet summary strip, tabs, then today's job cards or a 7-day lane board; plates are the visual anchor */
+:root{
+  --bg:#edf0f2; --surface:#fbfcfc; --sunk:#e3e8eb; --ink:#141a1e; --muted:#5b6870; --line:#d3dbe0;
+  --accent:#0d5b6c; --accent-soft:#d6e8ec; --accent-ink:#ffffff;
+  --gold:#8f6216; --gold-soft:#f2e6cf; --plate:#1c3e8c;
+  --ok:#2c7547; --ok-soft:#dcefe2; --warn:#9c5c0b; --warn-soft:#f6e6cf; --bad:#a3392f; --bad-soft:#f5dedb;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1316; --surface:#161f24; --sunk:#111a1e; --ink:#e6ebed; --muted:#92a2aa; --line:#25323a;
+  --accent:#62b8ca; --accent-soft:#163740; --accent-ink:#06171b;
+  --gold:#d8aa5c; --gold-soft:#3a2e18; --plate:#91b1ff;
+  --ok:#6cc18c; --ok-soft:#173523; --warn:#e3a24c; --warn-soft:#3a2a12; --bad:#e8796d; --bad-soft:#3d1c19;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1316; --surface:#161f24; --sunk:#111a1e; --ink:#e6ebed; --muted:#92a2aa; --line:#25323a;
+  --accent:#62b8ca; --accent-soft:#163740; --accent-ink:#06171b;
+  --gold:#d8aa5c; --gold-soft:#3a2e18; --plate:#91b1ff;
+  --ok:#6cc18c; --ok-soft:#173523; --warn:#e3a24c; --warn-soft:#3a2a12; --bad:#e8796d; --bad-soft:#3d1c19;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.45;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:18px 14px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:6px;font-family:var(--display);font-stretch:68%;font-weight:800;font-size:28px;letter-spacing:.04em;line-height:1}
+.brand .b2{font-weight:400;color:var(--accent)}
+.brand span:first-child{color:#a8801f;background:linear-gradient(180deg,#d4ad4a 0%,#b08a2e 45%,#8a6a1c 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand span:first-child{background:linear-gradient(180deg,#f3d77e 0%,#d9b450 50%,#b8922f 100%);-webkit-background-clip:text;background-clip:text}}
+:root[data-theme="dark"] .brand span:first-child{background:linear-gradient(180deg,#f3d77e 0%,#d9b450 50%,#b8922f 100%);-webkit-background-clip:text;background-clip:text}
+.top .sub{color:var(--muted);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.small{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.banner{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 14px;font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.stat{padding:14px 18px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat .k,.kpi .k,.lbl{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.stat .v{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.15}
+.stat .s{font-size:12.5px;color:var(--muted)}
+.tabs-wrap{overflow-x:auto}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);min-width:max-content}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;cursor:pointer;color:var(--muted);font-weight:600;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+h2{font-family:var(--display);font-stretch:80%;font-weight:700;font-size:21px;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:16px;margin:0}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:18px;line-height:1}
+.wk{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.load{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.load.over{color:var(--bad);font-weight:600}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:12px}
+.day{background:var(--sunk);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;min-height:150px;min-width:0}
+.day>header{display:flex;align-items:center;gap:6px;padding:2px 2px 4px;flex-wrap:wrap}
+.day .dn{font-family:var(--display);font-stretch:75%;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px}
+.day .dd{color:var(--muted);font-size:12.5px;flex:1}
+.day.is-today{background:var(--accent-soft)}
+.day.is-today .dn{color:var(--accent)}
+.day .add{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;width:26px;height:26px;border-radius:6px}
+.day .add:hover{background:var(--surface);color:var(--ink)}
+.none{color:var(--muted);margin:2px 4px;font-size:13px}
+.bk{display:flex;flex-direction:column;gap:5px;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:8px 9px;cursor:pointer}
+.bk:hover{border-color:var(--muted)}
+.st-vinnsla{border-left-color:var(--warn)!important}
+.st-klart,.st-skilad{border-left-color:var(--ok)!important}
+.bk.st-afbokad{opacity:.55}
+.bk.st-afbokad .who{text-decoration:line-through}
+.row{display:flex;align-items:center;gap:6px;justify-content:space-between;flex-wrap:wrap}
+.time{font-family:var(--mono);font-size:12.5px;font-weight:600}
+.plate{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.08em;color:var(--plate);border:1.5px solid var(--plate);border-radius:4px;padding:0 5px;background:var(--surface);white-space:nowrap;text-transform:uppercase}
+.who{font-weight:600;overflow-wrap:anywhere}
+.meta{display:flex;gap:4px;flex-wrap:wrap}
+.pill{font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.svc-detail{background:var(--accent-soft);color:var(--accent)}
+.svc-solu{background:var(--gold-soft);color:var(--gold)}
+.svc-hrad{background:var(--sunk);color:var(--ink)}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.dlgx{position:sticky;top:10px;float:right;margin:10px 10px 0 0;z-index:3;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.dlgx:hover{border-color:var(--muted);background:var(--sunk)}
+dialog.confirm{width:min(440px,calc(100vw - 32px))}
+.callcard{background:var(--gold-soft);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.callcard.late{border-left-color:var(--bad)}
+.bk.call{background:var(--gold-soft);border-left-color:var(--gold)}
+.bk.call.late{border-left-color:var(--bad)}
+.bk.call .time{color:var(--gold)}
+.sups{display:flex;flex-direction:column}
+.supcat{display:flex;flex-direction:column;gap:2px;padding-top:10px}
+.supcat+.supcat{border-top:2px solid var(--line);margin-top:6px}
+.supcat>.row{justify-content:flex-start;gap:10px}
+.sup{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-block:12px;border-bottom:1px solid var(--line)}
+.sup.low{border-left:3px solid var(--warn);padding-left:10px}
+.sup .nm{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sup .st{display:flex;align-items:baseline;gap:6px;min-width:110px}
+.sup .st .n{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+.sup .vl{display:flex;flex-direction:column;min-width:90px;font-variant-numeric:tabular-nums}
+.hist-prev{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.hist-prev .hrow{display:flex;flex-direction:column;gap:4px}
+.gsearch{flex:1 1 220px;max-width:340px;min-width:0}
+.gsearch input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px}
+.reslist{display:flex;flex-direction:column}
+.resrow{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line);text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%;cursor:pointer;color:inherit}
+.resrow:hover{background:var(--sunk)}
+.resrow.static{cursor:default}
+.resrow.static:hover{background:none}
+.trashrow{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.trashrow .lb{flex:1 1 240px;min-width:0}
+.vatgrid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 20px;max-width:520px;font-variant-numeric:tabular-nums}
+.vatgrid .tot{font-weight:700;font-size:17px;border-top:1px solid var(--line);padding-top:8px}
+#updbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:10px 12px 10px 16px;display:flex;gap:12px;align-items:center;font-weight:600;z-index:50;max-width:calc(100vw - 32px)}
+#updbar button{background:var(--accent-ink);color:var(--accent);border:0;border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer}
+.billgrp{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.billgrp .hd{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.billgrp .hd .nm{flex:1 1 200px;min-width:0}
+.billgrp .tot{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+.billrow{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:13px;color:var(--muted);padding:4px 0;border-top:1px dashed var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;cursor:pointer;width:100%}
+.billrow:hover{color:var(--ink)}
+.billrow .pr{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink)}
+.vatseg{display:inline-flex}
+#helpbg{position:fixed;inset:0;background:rgba(8,14,18,.35);z-index:59}
+#help{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--surface);color:var(--ink);border-left:1px solid var(--line);z-index:60;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;box-shadow:-12px 0 30px rgba(0,0,0,.12)}
+#help h2{margin-right:44px}
+#help h3{margin-top:4px}
+#help p,#help li{margin:0;line-height:1.5}
+#help ol,#help ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+#help .dlgx{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;float:none;margin:0}
+.tab .sm{display:none}
+.workline{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:13px;padding:8px 10px;background:var(--sunk);border-radius:8px}
+.workline .lnk{border:0;background:none;color:var(--accent);font-weight:600;cursor:pointer;padding:2px 4px;font-size:13px}
+.workline .lnk.del{color:var(--bad)}
+.namechips{display:flex;flex-wrap:wrap;gap:6px}
+.namechips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:600;cursor:pointer}
+.namechips button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.workers{display:flex;flex-direction:column;gap:6px}
+.workers .check{padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.planhint{font-size:12.5px;color:var(--gold);font-weight:600}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.price{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600}
+.price.unpaid{color:var(--warn)}
+.status{font-size:12px;color:var(--muted)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:18px;color:var(--muted)}
+.empty b{color:var(--ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:14px}
+/* today job cards */
+.job{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:14px}
+.jobhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.jobhead .time{font-size:17px}
+.jobhead .plate{font-size:14px;padding:1px 7px}
+.jobhead .who{font-size:16px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;background:var(--surface);padding:6px 11px;cursor:pointer;font-weight:600;font-size:13px;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.jobgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr);gap:20px}
+.col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:baseline}
+.kv dt{font-size:12px;color:var(--muted);font-weight:600}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.sel{user-select:all;font-variant-numeric:tabular-nums}
+.prog{height:6px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--ok)}
+.checks{display:flex;flex-direction:column;gap:3px}
+.checks .check{padding:3px 0;font-weight:400}
+.checks .check.done span{color:var(--muted);text-decoration:line-through}
+.thumbs{display:flex;gap:6px;flex-wrap:wrap}
+.thumb{width:64px;height:64px;border-radius:6px;overflow:hidden;border:1px solid var(--line);padding:0;cursor:pointer;background:var(--sunk)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.addph{width:64px;height:64px;border-radius:6px;border:1.5px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center}
+.addph:hover{border-color:var(--accent);color:var(--accent)}
+.addph.busy{opacity:.6;pointer-events:none}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--sunk)}
+td.num,th.num{text-align:right}
+.muted{color:var(--muted)}
+.search{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;min-width:0;width:260px;max-width:100%}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{display:flex;flex-direction:column;gap:2px}
+.kpi .v{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.hbar{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden;min-width:60px}
+.hbar i{display:block;height:100%;background:var(--accent)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.prices{display:grid;grid-template-columns:auto repeat(2,minmax(0,160px));gap:10px 16px;align-items:center}
+.prices .h{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.inline{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.inline .f{flex:1 1 120px}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 40px)}
+dialog.wide{width:min(900px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(8,14,18,.45)}
+.dlg{display:flex;flex-direction:column;gap:14px;padding:20px}
+.bigimg{max-width:100%;max-height:70vh;border-radius:8px;display:block;margin:0 auto}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f.full{grid-column:1/-1}
+.f>label{font-size:12px;font-weight:600;color:var(--muted)}
+.f input,.f select,.f textarea,.prices input,.col textarea{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.f textarea,.col textarea{min-height:64px;resize:vertical}
+.check{display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--accent);flex:none}
+.extras{display:flex;flex-direction:column;gap:4px}
+.hint{font-size:12.5px;color:var(--muted)}
+.hint.over{color:var(--bad);font-weight:600}
+.err{color:var(--bad);font-size:13px;font-weight:500;margin:0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}
+.hist .row{border-bottom:1px solid var(--line);padding-bottom:6px}
+.cars{display:flex;flex-direction:column;gap:8px}
+.carrow{display:grid;grid-template-columns:120px minmax(0,1fr) 150px auto;gap:6px;align-items:center;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.carrow .cr-notes{grid-column:1/-2}
+.carrow input,.carrow select,.fields.mini input{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;width:100%;min-width:0}
+.carrow .cr-plate{font-family:var(--mono);text-transform:uppercase;font-weight:600;color:var(--plate)}
+.chip{border:1.5px solid var(--plate);color:var(--plate);background:var(--surface);font-family:var(--mono);font-weight:600;font-size:12.5px;border-radius:6px;padding:4px 9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase}
+.chip small{font-family:var(--body);letter-spacing:0;text-transform:none;font-weight:500;margin-left:4px}
+.chip.on{background:var(--plate);color:var(--surface)}
+.fields.mini{grid-template-columns:1fr 1fr;gap:8px}
+.xbtn{border:0;background:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px}
+.xbtn:hover{color:var(--bad);background:var(--bad-soft)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100vw - 32px)}
+#toast.on{opacity:1}
+@media (max-width:1000px){.week{grid-template-columns:repeat(2,minmax(0,1fr))}.day{min-height:0}.jobgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.jobgrid .col:last-child{grid-column:1/-1}}
+@media (max-width:720px){
+  body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .top .sub,#logout{display:none}
+  .tabs-wrap{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:auto}
+  .tabs{border-bottom:0;min-width:0;justify-content:space-between;gap:0}
+  .tab{flex:1 1 0;padding:12px 2px 13px;font-size:12px;border-bottom:0;border-top:3px solid transparent;margin:0;white-space:nowrap}
+  .tab[aria-selected="true"]{border-top-color:var(--accent);border-bottom-color:transparent}
+  .tab .lg{display:none}
+  .tab .sm{display:inline}
+  #toast,#updbar{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat:nth-child(3){border-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--line)}
+  .week,.jobgrid{grid-template-columns:minmax(0,1fr)}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .fields{grid-template-columns:minmax(0,1fr)}
+  .carrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+  .carrow .cr-model{grid-column:1/3;grid-row:2}
+  .carrow .cr-notes{grid-column:1/3;grid-row:3}
+  .prices{grid-template-columns:auto minmax(0,1fr) minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+.login{min-height:80vh;display:grid;place-items:center;padding-block:24px}
+.login form{width:min(380px,100%);gap:16px}
+.login .brand{font-size:34px;justify-content:center;padding-block:6px 4px}
+.login .f input{font-size:16px}
+</style>
+<script src="supabase.js"></script>
+<script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
+<script src="config.js"></script>
+</head>
+<body>
+<section class="login" id="login" hidden>
+  <form id="loginform" class="panel" novalidate>
+    <div class="brand"><span>BESPOKE</span><span class="b2">DETAIL</span></div>
+    <div class="f"><label for="l_email">Netfang</label><input id="l_email" type="email" autocomplete="username" inputmode="email"></div>
+    <div class="f"><label for="l_pw">Lykilorð</label><input id="l_pw" type="password" autocomplete="current-password"></div>
+    <p class="err" id="lerr" hidden></p>
+    <button class="btn primary" type="submit" id="lbtn" style="justify-content:center">Skrá inn</button>
+  </form>
+</section>
+
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div class="brand"><span>BESPOKE</span><span class="b2">DETAIL</span></div>
+    <span class="sub">Stjórnborð</span>
+    <span class="sp"></span>
+    <form class="gsearch" id="gform" role="search" novalidate><input id="gq" type="search" placeholder="Leita: bílnúmer, nafn eða sími" aria-label="Leita að bílnúmeri, nafni eða síma" autocomplete="off"></form>
+    <button class="btn" id="helpbtn" data-act="help" aria-label="Hjálp" title="Hjálp og leiðbeiningar">?</button>
+    <button class="btn" id="whobtn" data-act="setname" hidden title="Breyta nafni á þessu tæki"></button>
+    <button class="btn" id="logout" data-act="logout" hidden>Skrá út</button>
+    <button class="btn primary" data-act="new">+ Ný bókun</button>
+  </header>
+  <div class="banner" id="banner" hidden>Tengist gagnageymslu…</div>
+  <section class="stats" id="stats" aria-label="Yfirlit"></section>
+  <div class="tabs-wrap"><nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="idag">Í dag</button>
+    <button class="tab" role="tab" data-tab="dagskra">Dagskrá</button>
+    <button class="tab" role="tab" data-tab="vidskiptavinir"><span class="lg">Viðskiptavinir</span><span class="sm">Viðsk.</span></button>
+    <button class="tab" role="tab" data-tab="askriftir"><span class="lg">Áskriftir</span><span class="sm">Áskr.</span></button>
+    <button class="tab" role="tab" data-tab="tekjur"><span class="lg">Tekjur og kostnaður</span><span class="sm">Tekjur</span></button>
+    <button class="tab" role="tab" data-tab="efni">Efni</button>
+    <button class="tab" role="tab" data-tab="stillingar"><span class="lg">Verðskrá og stillingar</span><span class="sm">Stillingar</span></button>
+  </nav></div>
+  <main id="view"></main>
+</div>
+<dialog id="dlg"><button type="button" class="dlgx" data-act="close" aria-label="Loka glugga">×</button><form id="frm" class="dlg" novalidate></form></dialog>
+<dialog id="dlg2" class="confirm"><button type="button" class="dlgx" data-act="close2" aria-label="Loka glugga">×</button><div id="frm2" class="dlg"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="helpbg" data-act="closehelp" hidden></div>
+<aside id="help" hidden aria-label="Leiðbeiningar">
+  <button type="button" class="dlgx" data-act="closehelp" aria-label="Loka leiðbeiningum">×</button>
+  <h2>Svona notar þú Bespoke Detail</h2>
+  <h3>Fyrsta skiptið</h3>
+  <ol><li>Skráðu þig inn með sameiginlega netfanginu og lykilorðinu.</li><li>Veldu nafnið þitt þegar spurt er „Hver ert þú?“. Það vistast á símanum.</li><li>Á iPhone: Safari → Deila → <b>Add to Home Screen</b>. Á Android: Chrome → ⋮ → <b>Add to Home screen</b>.</li></ol>
+  <h3>Bíll dagsins (Í dag)</h3>
+  <ol><li>Ýttu á <b>Í vinnslu</b> þegar þú byrjar og hakaðu við <b>hver tekur bílinn</b>. Það mega vera fleiri en einn. Klukkan fer af stað.</li><li>Skráðu <b>hvar bíllinn er</b> þegar þú hringir, og hvar <b>lyklarnir</b> eru (hjá eiganda, hjá okkur, skilað).</li><li>Skráðu <b>km við sókn</b> og <b>ástand og tjón</b> áður en þú snertir bílinn.</li><li>Taktu <b>myndir fyrir</b>, sérstaklega af rispum og dældum.</li><li>Hakaðu við <b>gátlistann</b> jafnóðum.</li><li>Taktu <b>myndir eftir</b>, skráðu km við skil og ýttu á <b>Klárt</b>. Þá stoppar klukkan.</li><li>Ýttu á <b>Skilað</b> þegar viðskiptavinurinn er kominn með bílinn.</li></ol>
+  <p>Þurftir þú að hoppa frá? Ýttu á <b>Breyta</b> við tímann og skráðu réttan tíma, eða <b>Eyða</b> ef hann á ekki að teljast með.</p>
+  <p>„Fyrri heimsóknir“ neðst á spjaldinu sýnir myndir og tjón frá síðustu skiptum, svo þú sérð hvað var þegar til staðar.</p>
+  <h3>Hringja í áskriftir</h3>
+  <p>Gul spjöld merkt <b>Hringja</b> birtast viku áður en bíll í áskrift á að koma. Hringdu, ýttu á <b>Bóka tíma</b> og veldu dag. Svari enginn, ýttu á <b>Fresta</b>.</p>
+  <h3>Efni</h3>
+  <p>Efnið skiptist í <b>Utan</b>, <b>Innan</b> og <b>Annað</b>. Ýttu á <b>− Opnað</b> þegar þú opnar nýjan brúsa eða pakka. Þegar eitthvað er að klárast birtist „Þarf að panta“.</p>
+  <h3>Ef eitthvað fer úrskeiðis</h3>
+  <ul><li><b>Eyddir einhverju óvart?</b> Það er í <b>Ruslafötunni</b> undir Stillingar í 30 daga. Ýttu á Endurheimta.</li><li><b>Ekkert netsamband?</b> Gulur borði birtist og breytingar vistast ekki. Bíddu eftir sambandi og gerðu aftur.</li><li><b>„Ný útgáfa er komin“?</b> Ýttu á Uppfæra.</li><li><b>Leita?</b> Skrifaðu bílnúmer, nafn eða síma í leitina efst.</li></ul>
+</aside>
+
+<script>
+(function(){
+const SERVICES={hrad:{name:"Hraðþrif",pickup:false},detail:{name:"Detail þrif",pickup:true},solu:{name:"Söluþrif",pickup:true}};
+const SIZES={small:"Lítill bíll",big:"Stór bíll / jeppi"};
+const STATUSES={bokad:"Bókað",vinnsla:"Í vinnslu",klart:"Klárt",skilad:"Skilað",afbokad:"Afbókað"};
+const FULL=["Tjöruhreinsir","Sápa og þvottur","Felguhreinsir","Járnhreinsun ef þarf","Spray bón","Dekkjagljái","Rain-X á rúður að utan","Ryksugað 3× og blásið","Föls hreinsuð","Innrétting með innréttingahreinsi","Rúður að innan","Rusl tæmt","Lokaskoðun: ekkert óhreint"];
+const DEFAULTS={
+  prices:{hrad:{small:0,big:0},detail:{small:38700,big:48700},solu:{small:0,big:0}},
+  durations:{hrad:{small:1,big:1.5},detail:{small:3,big:4},solu:{small:4,big:5}},
+  dayHours:8,
+  discounts:{"4":15,"6":10,"8":5},
+  extras:[],
+  messages:{pickup:"Góðan daginn {nafn}, ég kem og sæki bílinn ({bíll}) kl. {tími}. Kveðja, Bespoke Detail",ready:"Sæl/l {nafn}, bíllinn ({bíll}) er tilbúinn og skínandi hreinn. Kveðja, Bespoke Detail"},
+  company:{name:"Bespoke Detail",kt:"",vsk:"",address:"",phone:"",email:"",bank:""},
+  checklists:{hrad:["Þvottur","Felgur","Ryksugað","Rúður að innan","Rusl tæmt","Lokaskoðun"],detail:FULL,solu:FULL}
+};
+const DAYS=["Mán","Þri","Mið","Fim","Fös","Lau","Sun"];
+const DAYSL=["Mánudagur","Þriðjudagur","Miðvikudagur","Fimmtudagur","Föstudagur","Laugardagur","Sunnudagur"];
+const MON=["janúar","febrúar","mars","apríl","maí","júní","júlí","ágúst","september","október","nóvember","desember"];
+const MONS=["jan","feb","mar","apr","maí","jún","júl","ágú","sep","okt","nóv","des"];
+
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d)};
+const mondayOf=s=>{const d=parse(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return iso(d)};
+const TODAY=iso(new Date());
+/* a page left open overnight (home-screen app) must roll over to the new day */
+const dayCheck=()=>{if(iso(new Date())!==TODAY)location.reload()};
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")dayCheck()});
+setInterval(dayCheck,5*60e3);
+/* who is using this device: shared login, so each phone remembers its person */
+const who=()=>{try{return localStorage.getItem("ed_name")||""}catch(e){return""}};
+const ym=s=>s.slice(0,7);
+const addMonths=(m,n)=>{const[y,mm]=m.split("-").map(Number);const d=new Date(y,mm-1+n,1);return d.getFullYear()+"-"+pad(d.getMonth()+1)};
+const isoWeek=s=>{const d=parse(s);d.setDate(d.getDate()+3-((d.getDay()+6)%7));const w1=new Date(d.getFullYear(),0,4);return 1+Math.round(((d-w1)/864e5-3+((w1.getDay()+6)%7))/7)};
+const wd=s=>(parse(s).getDay()+6)%7;
+const nice=s=>{const d=parse(s);return d.getDate()+". "+MONS[d.getMonth()]};
+const niceLong=s=>{const d=parse(s);return DAYS[wd(s)]+" "+d.getDate()+". "+MON[d.getMonth()]};
+const kr=n=>(n?Math.round(n):0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")+" kr.";
+const hrs=n=>String(Math.round((n||0)*10)/10).replace(".",",");
+const round100=n=>Math.round(n/100)*100;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=id=>document.getElementById(id);
+
+/* platform hooks: the standalone website build replaces these */
+let photoSrc=id=>"/_blob/"+id;
+const openDlg=()=>{const d=document.getElementById("dlg");if(!d.open)d.showModal();d.scrollTop=0};
+let saveFile=async(name,data)=>{if(!S.downloads){toast("Niðurhal er ekki í boði hér.");return false}try{await S.downloads.save({filename:name,data});return true}catch(err){if(err&&err.code!=="declined")toast("Ekki tókst að búa til skrána.");return false}};
+let importJson=null,logout=null,signOutAll=null;
+/* history beyond what is loaded (the website loads the last 12 months; this page has everything) */
+let ensureFrom=null,customerHistory=null,searchOld=null,fetchOldPhotos=null,fetchEverything=null;
+const VAT=24,vatOf=(gross,rate)=>gross*rate/(100+rate);
+const S={canImport:false,db:null,assets:null,downloads:null,ready:false,bookings:[],customers:[],plans:[],expenses:[],supplies:[],trash:[],meta:{},settings:DEFAULTS,vatFrom:null,tab:"idag",day:TODAY,week:mondayOf(TODAY),month:ym(TODAY),q:""};
+try{const h=location.hash.slice(1);if(["idag","dagskra","vidskiptavinir","askriftir","tekjur","efni","stillingar"].includes(h))S.tab=h}catch(e){}
+
+const vatPeriodOf=m=>{const[y,mm]=m.split("-").map(Number);return y+"-"+pad(mm%2?mm:mm-1)};
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),2400)}
+function failMsg(e){
+  if(e&&e.code==="not_found")return"Þessu var eytt á öðru tæki. Síðan uppfærist.";
+  if(e&&e.code==="invalid_argument")return"Þú hefur ekki réttindi til að breyta gögnum hér.";
+  if(e&&e.code==="quota_exceeded")return"Geymslan er full. Eyddu gömlum gögnum eða myndum til að skapa pláss.";
+  if(e&&(e.code==="unsupported_type"||e.code==="invalid_request"))return"Þessi myndategund er ekki studd. Prófaðu JPG eða PNG.";
+  if(e&&e.code==="too_large")return"Myndin er of stór.";
+  return"Ekki tókst að vista. Athugaðu nettenginguna og reyndu aftur.";
+}
+const live=b=>b.status!=="afbokad";
+/* a car counts as sold once it is finished (or its day has passed); future bookings are only "bókað" */
+const sold=b=>live(b)&&(b.status==="klart"||b.status==="skilad"||b.date<TODAY);
+const priceFor=(svc,size)=>(S.settings.prices[svc]||{})[size]||0;
+const durFor=(svc,size)=>(S.settings.durations[svc]||{})[size]||0;
+const hoursOf=b=>b.hours!=null?+b.hours:durFor(b.service,b.size);
+const dayLoad=d=>S.bookings.filter(b=>b.date===d&&live(b)).reduce((a,b)=>a+hoursOf(b),0);
+const custById=id=>S.customers.find(c=>c.id===id);
+const svcName=k=>(SERVICES[k]||{}).name||k||"";
+const checklistFor=svc=>S.settings.checklists[svc]||[];
+const mapUrl=a=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(a+", Iceland");
+const sum=(l,f)=>l.reduce((a,x)=>a+(+f(x)||0),0);
+const staffList=()=>(S.settings.staff||[]).filter(Boolean);
+const workersOf=b=>b.workers&&b.workers.length?b.workers:[b.doneBy||b.statusBy].filter(Boolean);
+const fmtMin=m=>{m=Math.round(m||0);const h=Math.floor(m/60),r=m%60;return h?`${h} klst${r?" "+r+" mín":""}`:`${r} mín`};
+const hhmm=t=>new Date(t).toTimeString().slice(0,5);
+/* average real cleaning time for one car (by plate), from earlier visits with a recorded time */
+function carAvg(plate,exceptId){if(!plate)return null;const l=S.bookings.filter(x=>x.plate===plate&&x.id!==exceptId&&live(x)&&x.workMin!=null);return l.length?{avg:sum(l,x=>x.workMin)/l.length,n:l.length}:null}
+
+/* ---------- stats ---------- */
+function renderStats(){
+  const todayList=S.bookings.filter(b=>b.date===TODAY&&live(b)).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+  const wkStart=mondayOf(TODAY),wkEnd=addDays(wkStart,6);
+  const wk=S.bookings.filter(b=>b.date>=wkStart&&b.date<=wkEnd&&live(b));
+  const unpaid=S.bookings.filter(b=>sold(b)&&!b.paid);
+  const plans=S.plans.filter(p=>p.active);
+  const next=todayList.find(b=>b.status==="bokad");
+  const load=dayLoad(TODAY),calls=callsFor(TODAY).length,low=lowSupplies().length;
+  const et=document.querySelector('.tab[data-tab="efni"]');if(et)et.innerHTML="Efni"+(low?` <span class="pill warn">${low}</span>`:"");
+  const sTab=document.querySelector('.tab[data-tab="stillingar"]');if(sTab)sTab.innerHTML='<span class="lg">Verðskrá og stillingar</span><span class="sm">Stillingar</span>'+(S.ready&&S.db&&backupAge()>7?' <span class="pill warn">!</span>':"");
+  $("stats").innerHTML=`
+   <div class="stat"><span class="k">Í dag</span><span class="v">${todayList.length} ${todayList.length===1?"bíll":"bílar"}</span><span class="s">${hrs(load)} af ${hrs(S.settings.dayHours)} klst${next?" · næsti kl. "+esc(next.time||"—"):""}${calls?` · <b style="color:var(--gold)">${calls} ${calls===1?"símtal":"símtöl"}</b>`:""}${low?` · <b style="color:var(--warn)">${low} ${low===1?"efni":"efni"} að klárast</b>`:""}</span></div>
+   <div class="stat"><span class="k">Þessi vika</span><span class="v">${kr(sum(wk,b=>b.price))}</span><span class="s">${wk.length} bókanir · vika ${isoWeek(TODAY)}</span></div>
+   <div class="stat"><span class="k">Til innheimtu</span><span class="v" style="color:${unpaid.length?"var(--warn)":"inherit"}">${kr(sum(unpaid,b=>b.price))}</span><span class="s">${unpaid.length} ${unpaid.length===1?"bíll kláraður":"bílar kláraðir"}, ekki rukkað</span></div>
+   <div class="stat"><span class="k">Virkar áskriftir</span><span class="v">${plans.length}</span><span class="s">${plans.length?["4","6","8"].map(w=>plans.filter(p=>String(p.interval)===w).length+"× "+w+" vikna").join(" · "):"Engin enn"}</span></div>`;
+}
+
+/* ---------- today (job cards) ---------- */
+function job(b){
+  const c=custById(b.customerId)||{};
+  const car=(c.cars||[]).find(x=>x.plate===b.plate)||{};
+  const items=checklistFor(b.service),ck=b.checklist||{};
+  const done=items.filter(i=>ck[i]).length;
+  const photos=b.photos||[];
+  const ph=k=>photos.filter(p=>p.kind===k).map(p=>`<button type="button" class="thumb" data-act="photo" data-id="${esc(b.id)}" data-pid="${esc(p.id)}" aria-label="Skoða mynd"><img src="${esc(photoSrc(p.tid||p.id))}" alt="Mynd ${k}" loading="lazy"></button>`).join("");
+  const up=k=>S.assets?`<label class="addph" id="up-${esc(b.id)}-${k}">+ Mynd<input type="file" accept="image/*" multiple data-up="${esc(b.id)}" data-kind="${k}" hidden></label>`:"";
+  return `<article class="job st-${esc(b.status||"bokad")}" id="job-${esc(b.id)}">
+   <div class="jobhead"><span class="time">${esc(b.time||"—")}</span>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}<span class="who">${esc(b.customerName||"Óþekktur")}</span><span class="muted">${esc(b.model||"")}</span><span class="sp"></span>
+    <div class="seg" role="group" aria-label="Staða">${["bokad","vinnsla","klart","skilad"].map(s=>`<button type="button" class="${(b.status||"bokad")===s?"on":""}" data-act="setstatus" data-id="${esc(b.id)}" data-s="${s}">${STATUSES[s]}</button>`).join("")}</div>${b.statusBy&&b.status!=="bokad"?`<span class="hint">${esc(STATUSES[b.status]||"")}: ${esc(b.statusBy)}${b.statusAt?" kl. "+new Date(b.statusAt).toTimeString().slice(0,5):""}</span>`:""}</div>
+   ${workLine(b)}
+   <div class="jobgrid">
+    <div class="col"><dl class="kv">
+      <dt>Þjónusta</dt><dd><span class="meta"><span class="pill svc-${esc(b.service)}">${esc(svcName(b.service))}</span>${(b.extras||[]).map(x=>`<span class="pill">${esc(x.name)}</span>`).join("")}${planPill(b)}</span></dd>
+      <dt>Tími</dt><dd>≈ ${hrs(hoursOf(b))} klst · ${esc(SIZES[b.size]||"")}</dd>
+      <dt>Sími</dt><dd>${c.phone?`<span class="sel">${esc(c.phone)}</span> · <a href="tel:${esc(c.phone.replace(/\s/g,""))}">hringja</a>`:'<span class="muted">—</span>'}</dd>
+      ${b.pickup?`<dt>Sækja</dt><dd>${b.address?`${esc(b.address)} · <a href="${mapUrl(b.address)}" target="_blank" rel="noopener">kort</a>`:(b.where?'<span class="muted">Sjá „Hvar er bíllinn?“</span>':'<span class="muted">Hringja og spyrja hvar bíllinn er</span>')}</dd>`:`<dt>Afhending</dt><dd>Viðskiptavinur kemur með bílinn</dd>`}
+      ${car.notes?`<dt>Um bílinn</dt><dd>${esc(car.notes)}</dd>`:""}
+      ${b.notes?`<dt>Athugasemd</dt><dd>${esc(b.notes)}</dd>`:""}
+      ${c.notes?`<dt>Um viðskiptavin</dt><dd>${esc(c.notes)}</dd>`:""}
+      <dt>Verð</dt><dd><b class="price">${kr(b.price)}</b></dd>
+     </dl>
+     <div class="actions"><span class="sp"></span><button type="button" class="btn small" data-act="edit" data-id="${esc(b.id)}">Breyta bókun</button></div>
+    </div>
+    <div class="col"><div class="row"><span class="lbl">Gátlisti</span><span class="load">${done}/${items.length}</span></div><div class="prog"><i style="width:${items.length?done/items.length*100:0}%"></i></div>
+     <div class="checks">${items.map(i=>`<label class="check${ck[i]?" done":""}"><input type="checkbox" data-chk="${esc(b.id)}" data-item="${esc(i)}"${ck[i]?" checked":""}><span>${esc(i)}</span></label>`).join("")||'<span class="muted">Enginn gátlisti. Bættu honum við í stillingum.</span>'}</div>
+    </div>
+    <div class="col"><div class="fields mini">
+      <div class="f"><label for="kmin-${esc(b.id)}">Km við sókn</label><input id="kmin-${esc(b.id)}" inputmode="numeric" data-bid="${esc(b.id)}" data-bf="kmIn" value="${esc(b.kmIn||"")}"></div>
+      <div class="f"><label for="kmout-${esc(b.id)}">Km við skil</label><input id="kmout-${esc(b.id)}" inputmode="numeric" data-bid="${esc(b.id)}" data-bf="kmOut" value="${esc(b.kmOut||"")}"></div>
+      ${b.pickup?`<div class="f full"><label for="where-${esc(b.id)}">Hvar er bíllinn?</label><input id="where-${esc(b.id)}" data-bid="${esc(b.id)}" data-bf="where" value="${esc(b.where||"")}" placeholder="t.d. Hótel Borg, bílastæði B, lykill í móttöku"></div>`:""}
+      <div class="f full"><span class="lbl" id="kst-${esc(b.id)}">Lyklar eru</span><div class="seg" role="group" aria-labelledby="kst-${esc(b.id)}">${Object.entries(KEYST).map(([k,v])=>`<button type="button" class="${b.keyStatus===k?"on":""}" data-act="keystat" data-id="${esc(b.id)}" data-s="${k}">${v}</button>`).join("")}</div></div>
+      <div class="f full"><label for="keys-${esc(b.id)}">Um lyklana</label><input id="keys-${esc(b.id)}" data-bid="${esc(b.id)}" data-bf="keys" value="${esc(b.keys||"")}" placeholder="t.d. 2 lyklar, skilið í lyklabox"></div></div>
+     <label class="lbl" for="dmg-${esc(b.id)}">Ástand og tjón við sókn</label><textarea id="dmg-${esc(b.id)}" data-bid="${esc(b.id)}" data-bf="damage" placeholder="t.d. rispa á afturstuðara hægra megin, steinkast í framrúðu">${esc(b.damage||"")}</textarea>
+     <span class="lbl">Myndir fyrir</span><div class="thumbs">${ph("fyrir")}${up("fyrir")}</div>
+     <span class="lbl">Myndir eftir</span><div class="thumbs">${ph("eftir")}${up("eftir")}</div>
+     ${S.assets?"":'<span class="hint">Myndir er aðeins hægt að setja inn með ritaðgang.</span>'}
+    </div>
+   </div>${prevVisits(b)}</article>`;
+}
+const KEYST={eigandi:"Hjá eiganda",okkur:"Hjá okkur",skilad:"Skilað"};
+/* who is on the car and how long it took */
+function workLine(b){
+  const ws=b.workers||[],est=hoursOf(b)*60,avg=carAvg(b.plate,b.id),parts=[];
+  if(ws.length)parts.push(`<span>Starfsfólk: <b>${ws.map(esc).join(" + ")}</b></span><button type="button" class="lnk" data-act="workers" data-id="${esc(b.id)}">Breyta</button>`);
+  if(b.workMin!=null)parts.push(`<span>Tími: <b>${fmtMin(b.workMin)}</b> <span class="muted">(áætlað ${fmtMin(est)})</span></span><button type="button" class="lnk" data-act="edittime" data-id="${esc(b.id)}">Breyta</button><button type="button" class="lnk del" data-act="deltime" data-id="${esc(b.id)}">Eyða</button>`);
+  else if(b.status==="vinnsla"&&b.startedAt)parts.push(`<span>Byrjað kl. <b>${hhmm(b.startedAt)}</b>. Tíminn skráist þegar ýtt er á Klárt.</span>`);
+  else if(b.workMinDeleted||((b.status==="klart"||b.status==="skilad")&&b.startedAt))parts.push(`<span class="muted">Enginn tími skráður</span><button type="button" class="lnk" data-act="edittime" data-id="${esc(b.id)}">Skrá tíma</button>`);
+  if(avg)parts.push(`<span class="muted">Meðaltími á þennan bíl: <b>${fmtMin(avg.avg)}</b> (${avg.n} ${avg.n===1?"skipti":"skipti"})</span>`);
+  return parts.length?`<div class="workline">${parts.join("")}</div>`:"";
+}
+function openWorkers(id,start){
+  const b=S.bookings.find(x=>x.id===id);if(!b)return;
+  const cur=b.workers&&b.workers.length?b.workers:(who()?[who()]:[]);
+  const names=[...new Set([...staffList(),...cur])];
+  openWorkers.ctx={id,start};$("dlg").className="";$("frm").dataset.kind="workers";
+  $("frm").innerHTML=`<h2>Hver tekur bílinn?</h2><p class="hint" style="margin:0">${b.plate?esc(b.plate)+" · ":""}${esc(b.customerName||"")} · ${esc(svcName(b.service))}. Veldu einn eða fleiri.</p>
+   ${names.length?`<div class="workers">${names.map(n=>`<label class="check"><input type="checkbox" data-worker value="${esc(n)}"${cur.includes(n)?" checked":""}> ${esc(n)}</label>`).join("")}</div>`:""}
+   <div class="f"><label for="w_other">${names.length?"Annað nafn":"Nafn"}</label><input id="w_other" placeholder="t.d. Jói" autocomplete="off"></div>
+   ${staffList().length?"":'<p class="hint" style="margin:0">Enginn starfsmannalisti enn. Skrifaðu nafnið hér: það bætist á listann og verður hakreitur næst. Þú getur líka skráð allt starfsfólkið í Verðskrá og stillingar → Starfsfólk.</p>'}
+   <p class="err" id="ferr" hidden></p>
+   <div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">${start?"Byrja":"Vista"}</button></div>`;
+  openDlg();
+}
+/* the staff list saves on its own (no need to press Vista stillingar) */
+async function saveStaff(list,quiet){
+  const staff=[...new Set(list.map(x=>String(x).trim()).filter(Boolean))];
+  if(JSON.stringify(staff)===JSON.stringify(staffList()))return;
+  S.settings={...S.settings,staff};
+  try{try{await S.db.doc("settings/main").update({staff})}catch(e){await S.db.doc("settings/main").set({...S.settings,staff})}
+    if(!quiet)toast(staff.length?"Starfsfólk vistað: "+staff.join(", "):"Starfsmannalisti tæmdur")}catch(e){toast(failMsg(e))}
+}
+async function saveWorkers(){
+  const {id,start}=openWorkers.ctx||{},b=S.bookings.find(x=>x.id===id);if(!b)return;
+  const names=[...new Set([...document.querySelectorAll("[data-worker]:checked")].map(i=>i.value).concat($("w_other").value.split(",").map(x=>x.trim()).filter(Boolean)))];
+  if(!names.length){showErr("Veldu að minnsta kosti eitt nafn.");return}
+  const u={workers:names};
+  const fresh=names.filter(n=>!staffList().includes(n));if(fresh.length)saveStaff([...staffList(),...fresh],true);
+  if(start){u.status="vinnsla";u.statusBy=who()||names[0];u.statusAt=Date.now();if(!b.startedAt)u.startedAt=Date.now()}
+  $("savebtn").disabled=true;
+  try{await S.db.doc("bookings/"+id).update(u);toast(start?"Byrjað: "+names.join(" + "):"Starfsfólk vistað");$("dlg").close()}catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+function openTime(id){
+  const b=S.bookings.find(x=>x.id===id);if(!b)return;const m=b.workMin!=null?b.workMin:Math.round(hoursOf(b)*60);
+  openTime.id=id;$("dlg").className="";$("frm").dataset.kind="worktime";
+  $("frm").innerHTML=`<h2>Tími á bíl</h2><p class="hint" style="margin:0">${b.plate?esc(b.plate)+" · ":""}${esc(b.customerName||"")}. Skráðu tímann sem fór í bílinn, t.d. án hlés ef einhver þurfti að hoppa frá.</p>
+   <div class="fields"><div class="f"><label for="t_h">Klukkustundir</label><input id="t_h" type="number" inputmode="numeric" min="0" max="24" value="${Math.floor(m/60)}"></div><div class="f"><label for="t_m">Mínútur</label><input id="t_m" type="number" inputmode="numeric" min="0" max="59" value="${m%60}"></div></div>
+   <p class="err" id="ferr" hidden></p>
+   <div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">Vista tíma</button></div>`;
+  openDlg();
+}
+async function saveTime(){
+  const m=Math.round((+$("t_h").value||0)*60+(+$("t_m").value||0));
+  if(m<1||m>24*60){showErr("Skráðu tíma á milli 1 mínútu og 24 klst.");return}
+  $("savebtn").disabled=true;
+  try{await S.db.doc("bookings/"+openTime.id).update({workMin:m,workMinManual:true,workMinDeleted:false});toast("Tími vistaður: "+fmtMin(m));$("dlg").close()}catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+
+/* ---------- áskrift call reminders ---------- */
+const planOf=id=>S.plans.find(p=>p.id===id);
+const planPill=b=>b.planId&&planOf(b.planId)?'<span class="pill gold">Áskrift</span>':"";
+function planInfo(p){
+  const visits=S.bookings.filter(b=>b.planId===p.id&&live(b)).map(b=>b.date).sort();
+  const last=visits[visits.length-1]||p.startDate||TODAY;
+  const upcoming=visits.find(d=>d>=TODAY)||null;
+  let call=addDays(last,(p.interval-1)*7);
+  if(p.snoozeUntil&&p.snoozeUntil>call)call=p.snoozeUntil;
+  return{last,upcoming,call,due:addDays(last,p.interval*7),late:call<TODAY};
+}
+/* reminders shown on a day: on today, everything due or overdue; on a future day, the ones that fall on it */
+function callsFor(day){
+  if(day<TODAY)return[];
+  return S.plans.filter(p=>p.active).map(p=>({p,...planInfo(p)})).filter(x=>day===TODAY?x.call<=TODAY:x.call===day).sort((a,b)=>a.call.localeCompare(b.call));
+}
+const findPlan=(cid,plate)=>S.plans.find(p=>p.active&&p.customerId===cid&&(p.plate||"")===(plate||""))||null;
+function callCard(x){
+  const p=x.p,c=custById(p.customerId)||{};
+  return `<article class="callcard${x.late?" late":""}">
+   <div class="jobhead"><span class="pill gold">Hringja</span>${p.plate?`<span class="plate">${esc(p.plate)}</span>`:""}<span class="who">${esc(p.customerName)}</span><span class="muted">${esc(p.model||"")}</span><span class="sp"></span>${x.late?`<span class="pill bad">Átti að hringja ${nice(x.call)}</span>`:""}</div>
+   <dl class="kv"><dt>Sími</dt><dd>${c.phone?`<span class="sel">${esc(c.phone)}</span> · <a href="tel:${esc(c.phone.replace(/\s/g,""))}">hringja</a>`:'<span class="muted">Ekkert símanúmer skráð</span>'}</dd>
+    <dt>Áskrift</dt><dd>${esc(svcName(p.service))} á ${p.interval} vikna fresti · ${kr(p.price)}</dd>
+    <dt>Síðast</dt><dd>${niceLong(x.last)}</dd><dt>Á að koma</dt><dd>um ${niceLong(x.due)}</dd></dl>
+   <div class="actions"><button type="button" class="btn small primary" data-act="bookplan" data-id="${esc(p.id)}">Bóka tíma</button><button type="button" class="btn small" data-act="snooze" data-id="${esc(p.id)}">Fresta</button></div></article>`;
+}
+const callChip=x=>`<button class="bk call${x.late?" late":""}" data-act="callinfo" data-id="${esc(x.p.id)}"><span class="row"><span class="time">HRINGJA</span>${x.p.plate?`<span class="plate">${esc(x.p.plate)}</span>`:""}</span><span class="who">${esc(x.p.customerName)}</span><span class="status">${x.late?"Seint · ":""}á ${x.p.interval} vikna fresti</span></button>`;
+function bookFromPlan(id){
+  const p=planOf(id);if(!p)return;const x=planInfo(p);
+  let d=x.due;if(d<TODAY)d=TODAY;
+  openBooking(null,d,{customerId:p.customerId,plate:p.plate||"",model:p.model||"",size:p.size||"small",service:p.service,extras:p.extras||[],time:p.time||"09:00",pickup:!!p.pickup,address:p.address||"",price:p.price||undefined});
+}
+function openSnooze(id){
+  const p=planOf(id);if(!p)return;
+  $("dlg").className="";$("frm").dataset.kind="info";
+  $("frm").innerHTML=`<h2>Fresta símtali</h2><p style="margin:0">${esc(p.customerName)}${p.plate?" · "+esc(p.plate):""}. Hvenær á að minna á aftur?</p>
+   <div class="actions">${[[1,"Á morgun"],[2,"Eftir 2 daga"],[7,"Eftir viku"]].map(([n,l])=>`<button type="button" class="btn" data-act="dosnooze" data-id="${esc(id)}" data-n="${n}">${l}</button>`).join("")}</div>
+   <p class="err" id="ferr" hidden></p><div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button></div>`;
+  openDlg();
+}
+
+/* earlier visits of the same car: damage notes and photos, for "that scratch was already there" */
+function prevVisits(b){
+  if(!b.plate)return"";
+  const prev=S.bookings.filter(x=>x.plate===b.plate&&x.id!==b.id&&live(x)&&x.date<b.date).sort((a,c)=>c.date.localeCompare(a.date)).slice(0,3);
+  if(!prev.length)return"";
+  return `<div class="hist-prev"><span class="lbl">Fyrri heimsóknir · ${esc(b.plate)}</span>${prev.map(x=>`<div class="hrow"><div class="row" style="justify-content:flex-start"><b>${niceLong(x.date)}</b><span class="pill svc-${esc(x.service)}">${esc(svcName(x.service))}</span>${x.kmIn?`<span class="hint">${esc(x.kmIn)} km</span>`:""}${workersOf(x).length?`<span class="hint">· ${workersOf(x).map(esc).join(" + ")}</span>`:""}${x.workMin!=null?`<span class="hint">· ${fmtMin(x.workMin)}</span>`:""}</div>${x.damage?`<span><span class="hint">Ástand:</span> ${esc(x.damage)}</span>`:""}${(x.photos||[]).length?`<div class="thumbs">${x.photos.map(p=>`<button type="button" class="thumb" data-act="photo" data-id="${esc(x.id)}" data-pid="${esc(p.id)}" aria-label="Mynd frá ${nice(x.date)}"><img src="${esc(photoSrc(p.tid||p.id))}" alt="Mynd ${esc(p.kind)} ${nice(x.date)}" loading="lazy"></button>`).join("")}</div>`:""}</div>`).join("")}</div>`;
+}
+function renderToday(){
+  const d=S.day,list=S.bookings.filter(b=>b.date===d&&live(b)).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+  const load=dayLoad(d),cap=S.settings.dayHours,dt=parse(d),calls=callsFor(d);
+  const left=list.filter(b=>b.status==="bokad"||b.status==="vinnsla").length;
+  let h=`<div class="stack"><div class="bar"><button class="iconbtn" data-act="prevd" aria-label="Fyrri dagur">‹</button><button class="iconbtn" data-act="nextd" aria-label="Næsti dagur">›</button><h2>${d===TODAY?"Í dag · ":d===addDays(TODAY,1)?"Á morgun · ":""}${DAYSL[wd(d)]} ${dt.getDate()}. ${MON[dt.getMonth()]}</h2><span class="load${load>cap?" over":""}">${hrs(load)} / ${hrs(cap)} KLST</span><span class="sp"></span>${d!==TODAY?'<button class="btn small" data-act="today">Í dag</button>':""}<button class="btn small" data-act="addon" data-date="${d}">+ Bóka á þennan dag</button></div>`;
+  if(S.ready&&calls.length)h+=`<h3>Hringja og bóka · ${calls.length}</h3>${calls.map(callCard).join("")}${list.length?"<h3>Bílar</h3>":""}`;
+  if(!S.ready)h+=`<div class="empty">Sæki bókanir…</div>`;
+  else if(!list.length)h+=`<div class="empty"><b>Engir bílar á dagskrá ${d===TODAY?"í dag":"þennan dag"}.</b> Hér birtist verkspjald fyrir hvern bíl með gátlista, myndum og tjónaskráningu.</div>`;
+  else{if(load>cap)h+=`<div class="banner">Dagurinn er yfirbókaður: ${hrs(load)} klst af vinnu en ${hrs(cap)} klst í boði.</div>`;
+    if(!left&&d<=TODAY)h+=`<div class="empty" style="border-style:solid"><b>Allir bílar dagsins kláraðir.</b></div>`;
+    h+=list.map(job).join("")}
+  return h+"</div>";
+}
+
+/* ---------- schedule ---------- */
+function card(b){
+  return `<button class="bk st-${esc(b.status||"bokad")}" data-act="edit" data-id="${esc(b.id)}">
+    <span class="row"><span class="time">${esc(b.time||"—")}</span>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}</span>
+    <span class="who">${esc(b.customerName||"Óþekktur")}</span>
+    <span class="meta"><span class="pill svc-${esc(b.service)}">${esc(svcName(b.service))}</span>${(b.extras||[]).length?`<span class="pill">+${b.extras.length}</span>`:""}${b.pickup?'<span class="pill">Sótt</span>':""}${planPill(b)}</span>
+    ${(b.workers||[]).length?`<span class="status">${b.workers.map(esc).join(" + ")}</span>`:""}
+    <span class="row"><span class="status">${STATUSES[b.status]||"Bókað"}</span><span class="price ${b.paid?"":"unpaid"}">${kr(b.price)}${b.paid?" ✓":""}</span></span>
+  </button>`;
+}
+function renderSchedule(){
+  const days=[...Array(7)].map((_,i)=>addDays(S.week,i));
+  const inWeek=S.bookings.filter(b=>b.date>=days[0]&&b.date<=days[6]);
+  const cap=S.settings.dayHours;
+  let h=`<div class="bar"><button class="iconbtn" data-act="prevw" aria-label="Fyrri vika">‹</button><button class="iconbtn" data-act="nextw" aria-label="Næsta vika">›</button><h2>${nice(days[0])} – ${nice(days[6])} ${parse(days[6]).getFullYear()}</h2><span class="wk">VIKA ${isoWeek(days[0])}</span><span class="sp"></span>${S.week!==mondayOf(TODAY)?'<button class="btn small" data-act="thisw">Þessi vika</button>':""}</div><div class="week">`;
+  days.forEach((d,i)=>{
+    const list=inWeek.filter(b=>b.date===d).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+    const load=dayLoad(d),calls=callsFor(d);
+    h+=`<section class="day${d===TODAY?" is-today":""}"><header><span class="dn">${DAYS[i]}</span><span class="dd">${nice(d)}</span>${load?`<span class="load${load>cap?" over":""}">${hrs(load)}/${hrs(cap)}</span>`:""}<button class="add" data-act="addon" data-date="${d}" aria-label="Ný bókun ${nice(d)}">+</button></header>${calls.map(callChip).join("")}${list.length?list.map(card).join(""):calls.length?"":'<p class="none">—</p>'}</section>`;
+  });
+  h+="</div>";
+  if(S.ready&&!S.bookings.length)h+=`<div class="empty" style="margin-top:12px"><b>Engar bókanir skráðar enn.</b> Smelltu á „+ Ný bókun“ eða á + við dag til að skrá fyrsta bílinn. Viðskiptavinur og bíll vistast sjálfkrafa í viðskiptavinaskrána.</div>`;
+  return h;
+}
+
+/* ---------- customers ---------- */
+function custStats(id){
+  const list=S.bookings.filter(b=>b.customerId===id&&live(b));
+  const past=list.filter(b=>b.date<=TODAY);
+  return{visits:past.length,last:past.map(b=>b.date).sort().pop(),next:list.filter(b=>b.date>TODAY).map(b=>b.date).sort()[0],total:sum(past,b=>b.price)};
+}
+function renderCustomers(){
+  const q=S.q.trim().toLowerCase();
+  const list=S.customers.filter(c=>!q||[c.name,c.phone,c.email,...(c.cars||[]).map(x=>x.plate+" "+(x.model||""))].join(" ").toLowerCase().includes(q)).sort((a,b)=>(a.name||"").localeCompare(b.name||"","is"));
+  let h=`<div class="panel"><div class="bar"><h2>Viðskiptavinir</h2><span class="muted">${S.customers.length}</span><span class="sp"></span><input class="search" id="q" type="search" placeholder="Leita að nafni, síma eða bílnúmeri" value="${esc(S.q)}"><button class="btn" data-act="newcust">+ Viðskiptavinur</button></div>`;
+  if(!S.customers.length)return h+`<div class="empty"><b>Engir viðskiptavinir enn.</b> Þeir bætast við sjálfkrafa þegar þú skráir bókun, eða þú getur bætt þeim við hér.</div></div>`;
+  h+=`<div class="tablewrap"><table><thead><tr><th>Nafn</th><th>Sími</th><th>Bílar</th><th class="num">Heimsóknir${S.windowed?" (12 mán.)":""}</th><th>Síðast</th><th>Næst</th><th class="num">Samtals${S.windowed?" (12 mán.)":""}</th></tr></thead><tbody>`;
+  list.forEach(c=>{const s=custStats(c.id);
+    const stale=s.last&&!s.next&&s.last<addDays(TODAY,-56);
+    h+=`<tr class="click" data-act="opencust" data-id="${esc(c.id)}"><td><b>${esc(c.name)}</b>${S.plans.some(p=>p.active&&p.customerId===c.id)?' <span class="pill gold">Áskrift</span>':""}${stale?' <span class="pill warn">Ekki komið í 8+ vikur</span>':""}</td><td>${esc(c.phone||"—")}</td><td><span class="meta">${(c.cars||[]).map(x=>`<span class="plate">${esc(x.plate)}</span>`).join("")||'<span class="muted">—</span>'}</span></td><td class="num">${s.visits}</td><td>${s.last?nice(s.last):"—"}</td><td>${s.next?nice(s.next):"—"}</td><td class="num">${kr(s.total)}</td></tr>`});
+  return h+`</tbody></table></div>${list.length?"":'<p class="muted">Ekkert fannst.</p>'}</div>`;
+}
+
+/* ---------- plans ---------- */
+function renderPlans(){
+  const list=[...S.plans].sort((a,b)=>(b.active-a.active)||(a.customerName||"").localeCompare(b.customerName||"","is"));
+  const d=S.settings.discounts;
+  let h=`<div class="panel"><div class="bar"><h2>Áskriftir</h2><span class="sp"></span><span class="hint">Afsláttur: 4 vikur ${d["4"]}% · 6 vikur ${d["6"]}% · 8 vikur ${d["8"]}%</span></div>`;
+  if(!list.length)return h+`<div class="empty"><b>Engar áskriftir enn.</b> Veldu „Endurtaka“ þegar þú skráir bókun til að setja bíl á 4, 6 eða 8 vikna fresti. Viku áður en kemur að næsta skipti birtist áminning um að hringja í viðskiptavininn og bóka.</div></div>`;
+  h+=`<div class="tablewrap"><table><thead><tr><th>Viðskiptavinur</th><th>Bíll</th><th>Þjónusta</th><th>Tíðni</th><th class="num">Verð</th><th>Síðasta / næsta heimsókn</th><th>Hringja</th><th></th></tr></thead><tbody>`;
+  list.forEach(p=>{
+    const x=planInfo(p);
+    const callCell=!p.active?'<span class="muted">—</span>':x.upcoming&&x.upcoming>TODAY?`${nice(x.call)} <span class="muted">(eftir næstu heimsókn)</span>`:x.late?`<span class="pill bad">Seint · ${nice(x.call)}</span>`:x.call===TODAY?'<span class="pill gold">Í dag</span>':nice(x.call);
+    h+=`<tr><td><b>${esc(p.customerName)}</b></td><td>${p.plate?`<span class="plate">${esc(p.plate)}</span>`:"—"}</td><td><span class="pill svc-${esc(p.service)}">${esc(svcName(p.service))}</span></td><td>Á ${p.interval} vikna fresti <span class="muted">−${p.discount}%</span></td><td class="num">${kr(p.price)}</td><td>${x.upcoming&&x.upcoming>TODAY?`Bókað ${niceLong(x.upcoming)}`:niceLong(x.last)}</td><td>${callCell}</td>
+    <td><span class="actions">${p.active?`<button class="btn small" data-act="bookplan" data-id="${esc(p.id)}">Bóka</button>${x.call<=TODAY?`<button class="btn small" data-act="snooze" data-id="${esc(p.id)}">Fresta</button>`:""}<button class="btn small" data-act="stopplan" data-id="${esc(p.id)}">Stöðva</button>`:'<span class="pill">Stöðvuð</span>'}<button class="btn small danger" data-act="delplan" data-id="${esc(p.id)}">Eyða</button></span></td></tr>`});
+  return h+`</tbody></table></div></div>`;
+}
+
+/* ---------- revenue & costs ---------- */
+function monthData(m){
+  const all=S.bookings.filter(b=>live(b)&&ym(b.date)===m),l=all.filter(sold),up=all.filter(b=>!sold(b)),e=S.expenses.filter(x=>ym(x.date||"")===m);
+  return{l,e,up,t:sum(l,b=>b.price),p:sum(l.filter(b=>b.paid),b=>b.price),c:sum(e,x=>x.amount),ut:sum(up,b=>b.price)};
+}
+function chart(){
+  const months=[...Array(6)].map((_,i)=>addMonths(S.month,i-5));
+  const data=months.map(m=>({m,...monthData(m)}));
+  const max=Math.max(1,...data.map(d=>Math.max(d.t,d.c)));
+  const step=[10000,25000,50000,100000,250000,500000,1000000,2500000].find(s=>max/s<=5)||5000000;
+  const top=Math.ceil(max/step)*step;
+  const W=560,H=220,L=56,R=8,T=12,B=28,cw=(W-L-R)/6,bw=cw*.32;
+  const y=v=>T+(H-T-B)*(1-v/top);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tekjur og kostnaður síðustu 6 mánuði">`;
+  for(let v=0;v<=top;v+=step)s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--mono)">${v>=1e6?String(v/1e6).replace(".",",")+"m":v/1000+"þ"}</text>`;
+  data.forEach((d,i)=>{const x=L+cw*i+cw/2-bw-1,x2=L+cw*i+cw/2+1;
+    if(d.t)s+=`<rect x="${x}" y="${y(d.t)}" width="${bw}" height="${y(0)-y(d.t)}" fill="var(--accent-soft)" rx="2"><title>${kr(d.t)} tekjur</title></rect>`;
+    if(d.p)s+=`<rect x="${x}" y="${y(d.p)}" width="${bw}" height="${y(0)-y(d.p)}" fill="var(--accent)" rx="2"><title>${kr(d.p)} greitt</title></rect>`;
+    if(d.c)s+=`<rect x="${x2}" y="${y(d.c)}" width="${bw}" height="${y(0)-y(d.c)}" fill="var(--gold)" rx="2"><title>${kr(d.c)} kostnaður</title></rect>`;
+    s+=`<text x="${L+cw*i+cw/2}" y="${H-8}" text-anchor="middle" font-size="12" fill="${d.m===S.month?"var(--ink)":"var(--muted)"}" font-weight="${d.m===S.month?700:400}">${MONS[+d.m.slice(5)-1]}</text>`});
+  return s+"</svg>";
+}
+function vatMonths(){return S.vatMode==="2m"?[vatPeriodOf(S.month),addMonths(vatPeriodOf(S.month),1)]:[S.month]}
+function vatData(months){
+  const sales=S.bookings.filter(b=>sold(b)&&months.includes(ym(b.date)));
+  const exps=S.expenses.filter(x=>months.includes(ym(x.date||"")));
+  const gross=sum(sales,b=>b.price),out=sum(sales,b=>vatOf(+b.price||0,VAT));
+  const egross=sum(exps,x=>x.amount),inn=sum(exps,x=>vatOf(+x.amount||0,x.vat==null?VAT:+x.vat));
+  return{months,sales,exps,gross,out,egross,inn,pay:out-inn};
+}
+const periodName=from=>{const[y,m]=from.split("-").map(Number);return MONS[m-1]+"–"+MONS[m]+" "+y};
+const vatLabel=months=>months.length>1?periodName(months[0]):MON[+months[0].slice(5)-1]+" "+months[0].slice(0,4);
+function renderVat(){
+  const months=vatMonths(),v=vatData(months),two=S.vatMode==="2m";
+  return `<div class="panel"><div class="bar"><h3>VSK · ${vatLabel(months)}</h3><span class="sp"></span><div class="seg vatseg" role="group" aria-label="Tímabil"><button type="button" class="${two?"":"on"}" data-act="vatmode" data-m="month">Mánuður</button><button type="button" class="${two?"on":""}" data-act="vatmode" data-m="2m">2 mánuðir</button></div>${S.downloads?'<button class="btn small" data-act="vatcsv">CSV</button>':""}</div>
+   <div class="vatgrid"><span>Sala með VSK (${v.sales.length} bókanir)</span><span>${kr(v.gross)}</span><span>Sala án VSK</span><span>${kr(v.gross-v.out)}</span><span>Útskattur ${VAT}%</span><span>${kr(v.out)}</span>
+    <span>Innkaup með VSK (${v.exps.length})</span><span>${kr(v.egross)}</span><span>Innskattur</span><span>${kr(v.inn)}</span>
+    <span class="tot">${v.pay>=0?"VSK til greiðslu":"Inneign"}</span><span class="tot">${kr(Math.abs(v.pay))}</span></div>
+   <p class="hint" style="margin:0">Fylgir mánuðinum sem er valinn efst. Aðeins kláraðir bílar teljast með. Reiknað út frá því að öll verð séu með ${VAT}% VSK, og VSK á hverjum kostnaðarlið eins og hann var skráður. Láttu bókarann staðfesta tölurnar áður en skilað er.</p></div>`;
+}
+function renderRevenue(){
+  const {l,e,up,t,p,c,ut}=monthData(S.month);
+  const [yy,mm]=S.month.split("-").map(Number);
+  const bySvc=Object.keys(SERVICES).map(k=>{const x=l.filter(b=>b.service===k),tm=x.filter(b=>b.workMin!=null);return{k,n:x.length,t:sum(x,b=>b.price),avg:tm.length?sum(tm,b=>b.workMin)/tm.length:null,est:x.length?sum(x,b=>hoursOf(b)*60)/x.length:null}});
+  const mx=Math.max(1,...bySvc.map(x=>x.t));
+  const hours=sum(l,hoursOf);
+  const lastSupplier=[...S.expenses].sort((a,b)=>(b.date||"").localeCompare(a.date||""))[0]?.supplier||"";
+  const done=l.filter(b=>b.status==="klart"||b.status==="skilad");
+  /* a car counts for everyone on it; hours and revenue are split equally between them */
+  const people={};done.forEach(b=>{const ws=workersOf(b).length?workersOf(b):["Óskráð"],sh=1/ws.length,h=b.workMin!=null?b.workMin/60:hoursOf(b);ws.forEach(k=>{(people[k]||(people[k]={n:0,t:0,h:0}));people[k].n++;people[k].t+=(+b.price||0)*sh;people[k].h+=h*sh})});
+  const staff=Object.entries(people).sort((a,b)=>b[1].n-a[1].n);
+  return `<div class="stack">${renderBilling()}<div class="panel"><div class="bar"><button class="iconbtn" data-act="prevm" aria-label="Fyrri mánuður">‹</button><button class="iconbtn" data-act="nextm" aria-label="Næsti mánuður">›</button><h2>${MON[mm-1][0].toUpperCase()+MON[mm-1].slice(1)} ${yy}</h2><span class="sp"></span>${S.downloads?`<button class="btn small" data-act="csv">Sækja CSV fyrir bókhald</button>`:""}</div>
+   <div class="kpis"><div class="kpi"><span class="k">Tekjur · kláraðir bílar</span><span class="v">${kr(t)}</span></div><div class="kpi"><span class="k">Rukkað</span><span class="v" style="color:var(--ok)">${kr(p)}</span></div><div class="kpi"><span class="k">Órukkað</span><span class="v" style="color:${t-p?"var(--warn)":"inherit"}">${kr(t-p)}</span></div>${up.length?`<div class="kpi"><span class="k">Bókað framundan · ${up.length}</span><span class="v muted">${kr(ut)}</span></div>`:""}<div class="kpi"><span class="k">Kostnaður</span><span class="v">${kr(c)}</span></div><div class="kpi"><span class="k">Hagnaður</span><span class="v" style="color:${t-c<0?"var(--bad)":"inherit"}">${kr(t-c)}</span></div><div class="kpi"><span class="k">Bílar · á klst</span><span class="v">${l.length} · ${kr(hours?(t-c)/hours:0)}</span></div></div></div>
+   <div class="grid2"><div class="panel"><h3>Síðustu 6 mánuðir</h3><div class="legend"><span style="--c:var(--accent)">Rukkað</span><span style="--c:var(--accent-soft)">Órukkað</span><span style="--c:var(--gold)">Kostnaður</span></div><div class="chart">${chart()}</div></div>
+   <div class="panel"><h3>Eftir þjónustu</h3><div class="tablewrap"><table><tbody>${bySvc.map(x=>`<tr><td><span class="pill svc-${x.k}">${SERVICES[x.k].name}</span></td><td class="num">${x.n}</td><td style="width:34%"><div class="hbar"><i style="width:${x.t/mx*100}%"></i></div></td><td class="num">${kr(x.t)}</td><td class="num muted">${x.avg!=null?"meðaltími "+fmtMin(x.avg)+(x.est?` <span title="áætlað">(áætl. ${fmtMin(x.est)})</span>`:""):"—"}</td></tr>`).join("")}</tbody></table></div></div></div>
+   <div class="panel"><h3>Kostnaður í ${MON[mm-1]}</h3>
+    <form id="expform" class="inline" novalidate><div class="f"><label for="e_date">Dags.</label><input id="e_date" type="date" value="${ym(TODAY)===S.month?TODAY:S.month+"-01"}"></div><div class="f"><label for="e_sup">Birgir</label><input id="e_sup" value="${esc(lastSupplier)}" placeholder="t.d. Málningarvörur"></div><div class="f" style="flex-grow:2"><label for="e_desc">Lýsing</label><input id="e_desc" placeholder="t.d. tjöruhreinsir, örtrefjaklútar"></div><div class="f"><label for="e_amt">Upphæð með VSK (kr.)</label><input id="e_amt" type="number" inputmode="numeric" min="0"></div><div class="f" style="flex:0 1 110px"><label for="e_vat">VSK</label><select id="e_vat"><option value="24">24%</option><option value="11">11%</option><option value="0">Enginn</option></select></div><button class="btn primary" type="submit">Skrá</button></form>
+    ${e.length?`<div class="tablewrap"><table><tbody>${[...e].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(x=>`<tr class="click" data-act="editexp" data-id="${esc(x.id)}"><td>${nice(x.date)}</td><td>${esc(x.supplier||"")}</td><td>${esc(x.description||"")}</td><td class="num muted">${x.vat==null?VAT:x.vat}%</td><td class="num">${kr(x.amount)}</td></tr>`).join("")}</tbody></table></div>`:'<p class="muted" style="margin:0">Enginn kostnaður skráður í þessum mánuði.</p>'}</div>
+   ${e.length?'<p class="hint" style="margin:-6px 0 0">Smelltu á línu til að breyta eða eyða.</p>':""}
+   <div class="grid2"><div class="panel"><h3>Eftir starfsmanni · ${MON[mm-1]}</h3>${staff.length?`<div class="tablewrap"><table><thead><tr><th>Nafn</th><th class="num">Bílar</th><th class="num">Klst</th><th class="num">Tekjur</th></tr></thead><tbody>${staff.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v.n}</td><td class="num">${hrs(v.h)}</td><td class="num">${kr(v.t)}</td></tr>`).join("")}</tbody></table></div>`:'<p class="muted" style="margin:0">Engir kláraðir bílar í þessum mánuði.</p>'}<p class="hint" style="margin:0">Bíll telst hjá öllum sem tóku hann. Tímum og tekjum er skipt jafnt á milli þeirra.</p></div>
+   ${renderVat()}</div>
+</div>`;
+}
+/* ---------- til innheimtu: what the office needs to charge, by customer ---------- */
+function billGroups(){
+  const list=S.bookings.filter(b=>sold(b)&&!b.paid).sort((a,b)=>a.date.localeCompare(b.date));
+  const g=new Map();
+  list.forEach(b=>{const k=b.customerId||("n:"+b.customerName);if(!g.has(k))g.set(k,{key:k,name:b.customerName||"Óþekktur",kt:custById(b.customerId)?.kt||"",items:[]});g.get(k).items.push(b)});
+  return[...g.values()].map(x=>({...x,total:sum(x.items,b=>b.price)})).sort((a,b)=>b.total-a.total);
+}
+function renderBilling(){
+  const gs=billGroups(),total=sum(gs,x=>x.total),n=sum(gs,x=>x.items.length);
+  return `<div class="panel"><div class="bar"><h2>Til innheimtu</h2><span class="muted">${n} ${n===1?"bíll":"bílar"} · ${kr(total)}</span><span class="sp"></span>${gs.length&&S.downloads?'<button class="btn small" data-act="billcsv">Sækja lista fyrir skrifstofu</button>':""}</div>
+   ${gs.length?gs.map(x=>`<div class="billgrp"><div class="hd"><div class="nm"><b>${esc(x.name)}</b>${x.kt?`<span class="hint"> · kt. ${esc(x.kt)}</span>`:""}<br><span class="hint">${x.items.length} ${x.items.length===1?"bíll":"bílar"}</span></div><span class="tot">${kr(x.total)}</span><button class="btn small primary" data-act="billcust" data-id="${esc(x.key)}">Merkja rukkað</button></div>
+    ${x.items.map(b=>`<button type="button" class="billrow" data-act="edit" data-id="${esc(b.id)}"><span>${niceLong(b.date)}</span>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}<span>${esc(svcName(b.service))}${(b.extras||[]).length?" + "+b.extras.map(e=>esc(e.name)).join(", "):""}</span><span class="pr">${kr(b.price)}</span></button>`).join("")}</div>`).join(""):'<p class="muted" style="margin:0">Allt rukkað. Kláraðir bílar birtast hér þar til skrifstofan merkir þá rukkaða.</p>'}</div>`;
+}
+function billCsv(){
+  const q=s=>{s=String(s??"");return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};
+  const rows=[["Viðskiptavinur","Kennitala","Dagsetning","Bílnúmer","Þjónusta","Upphæð með VSK","Samtals á viðskiptavin"]];
+  billGroups().forEach(x=>x.items.forEach((b,i)=>rows.push([x.name,x.kt,b.date,b.plate||"",svcName(b.service)+((b.extras||[]).length?" + "+b.extras.map(e=>e.name).join(", "):""),b.price||0,i===x.items.length-1?x.total:""])));
+  saveFile("bespoke-detail-til-innheimtu-"+TODAY+".csv","\ufeff"+rows.map(r=>r.map(q).join(";")).join("\r\n"));
+}
+
+/* ---------- supplies (Efni) ---------- */
+const isLow=x=>(+x.stock||0)<=(+x.low||0);
+const lowSupplies=()=>S.supplies.filter(isLow);
+const SUPCATS={utan:"Utan",innan:"Innan",annad:"Annað"};
+const supCat=x=>SUPCATS[x.cat]?x.cat:"annad";
+function renderSupplies(){
+  const list=[...S.supplies].sort((a,b)=>(isLow(b)-isLow(a))||(a.name||"").localeCompare(b.name||"","is"));
+  const low=lowSupplies(),value=sum(S.supplies,x=>(+x.stock||0)*(+x.price||0));
+  let h=`<div class="stack"><div class="panel"><div class="bar"><h2>Efni</h2><span class="muted">${S.supplies.length} vörur · ${kr(value)} á lager</span><span class="sp"></span><button class="btn primary" data-act="newsupply">+ Nýtt efni</button></div>`;
+  if(low.length)h+=`<div class="banner"><b>Þarf að panta:</b> ${low.map(x=>esc(x.name)+" ("+(+x.stock||0)+" eftir)").join(", ")}</div>`;
+  if(!S.supplies.length)return h+`<div class="empty"><b>Ekkert efni skráð enn.</b> Skráðu sápu, tjöruhreinsi og annað sem þið notið. Þú setur inn stærð, verð og hvað er til, og „+ Keypt“ skráir innkaup beint í kostnað.</div></div></div>`;
+  Object.keys(SUPCATS).forEach(cat=>{const grp=list.filter(x=>supCat(x)===cat);
+  h+=`<div class="supcat"><div class="row"><h3>${SUPCATS[cat]}</h3><span class="hint">${grp.length} ${grp.length===1?"vara":"vörur"} · ${kr(sum(grp,x=>(+x.stock||0)*(+x.price||0)))}</span></div><div class="sups">`;
+  if(!grp.length)h+=`<p class="hint" style="margin:6px 0 0">Ekkert efni í þessum flokki.</p>`;
+  grp.forEach(x=>{const st=+x.stock||0;
+    h+=`<div class="sup${isLow(x)?" low":""}"><div class="nm"><b>${esc(x.name)}</b><span class="hint">${[x.size,x.supplier,kr(x.price)+"/stk"].filter(Boolean).map(esc).join(" · ")}</span></div>
+     <div class="st"><span class="n">${st}</span><span class="hint">á lager${isLow(x)?' · <b style="color:var(--warn)">panta</b>':""}</span></div>
+     <div class="vl"><span class="hint">Virði</span><span>${kr(st*(+x.price||0))}</span></div>
+     <div class="actions"><button class="btn small" data-act="opened" data-id="${esc(x.id)}"${st>0?"":" disabled"}>− Opnað</button><button class="btn small" data-act="bought" data-id="${esc(x.id)}">+ Keypt</button><button class="btn small" data-act="editsupply" data-id="${esc(x.id)}">Breyta</button></div></div>`});
+  h+=`</div></div>`});
+  return h+`<p class="hint" style="margin:0">Talið í brúsum eða pakkningum. Ýttu á „− Opnað“ þegar nýr brúsi er tekinn í notkun.</p></div></div>`;
+}
+let editSupply=null;
+function openSupply(x){
+  editSupply=x||null;
+  const lastSup=[...S.supplies,...S.expenses].map(e=>e.supplier).filter(Boolean).pop()||"";
+  $("dlg").className="";$("frm").dataset.kind="supply";
+  $("frm").innerHTML=`<h2>${x?esc(x.name):"Nýtt efni"}</h2>
+   <div class="fields">
+    <div class="f full"><label for="s_name">Heiti</label><input id="s_name" value="${esc(x?.name||"")}" placeholder="t.d. Tjöruhreinsir"></div>
+    <div class="f full"><label>Flokkur</label><div class="seg" role="radiogroup" aria-label="Flokkur" id="s_cat">${Object.entries(SUPCATS).map(([k,v])=>`<button type="button" role="radio" data-act="supcat" data-s="${k}" class="${(x?supCat(x):(openSupply.lastCat||"utan"))===k?"on":""}" aria-checked="${(x?supCat(x):(openSupply.lastCat||"utan"))===k}">${v}</button>`).join("")}</div></div>
+    <div class="f"><label for="s_sup">Birgir</label><input id="s_sup" value="${esc(x?x.supplier||"":lastSup)}" placeholder="t.d. Málningarvörur"></div>
+    <div class="f"><label for="s_size">Stærð á brúsa / pakkningu</label><input id="s_size" value="${esc(x?.size||"")}" placeholder="t.d. 5 L"></div>
+    <div class="f"><label for="s_price">Verð á stykki (kr.)</label><input id="s_price" type="number" inputmode="numeric" min="0" value="${x?.price??""}"></div>
+    <div class="f"><label for="s_stock">Á lager núna</label><input id="s_stock" type="number" inputmode="numeric" min="0" step="1" value="${x?.stock??0}"></div>
+    <div class="f"><label for="s_low">Láta vita þegar eftir eru</label><input id="s_low" type="number" inputmode="numeric" min="0" step="1" value="${x?.low??1}"><span class="hint">„Þarf að panta“ birtist þegar lagerinn fer niður í þessa tölu.</span></div>
+   </div>
+   <p class="err" id="ferr" hidden></p>
+   <div class="actions">${x?'<button type="button" class="btn danger" data-act="askdelsup">Eyða</button><button type="button" class="btn danger" data-act="dodelsup" hidden>Staðfesta eyðingu</button>':""}<span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">Vista</button></div>`;
+  openDlg();setTimeout(()=>$("s_name").focus(),0);
+}
+async function saveSupply(){
+  const name=$("s_name").value.trim();if(!name){showErr("Skráðu heiti.");return}
+  const cat=($("s_cat").querySelector(".on")||{}).dataset?.s||"annad";openSupply.lastCat=cat;
+  const body={name,cat,supplier:$("s_sup").value.trim(),size:$("s_size").value.trim(),price:+$("s_price").value||0,stock:Math.max(0,Math.round(+$("s_stock").value||0)),low:Math.max(0,Math.round(+$("s_low").value||0))};
+  $("savebtn").disabled=true;
+  try{if(editSupply)await S.db.doc("supplies/"+editSupply.id).update(body);else await S.db.collection("supplies").add({...body,createdAt:Date.now()});toast("Efni vistað");$("dlg").close()}
+  catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+let buySupply=null;
+function openBought(x){
+  buySupply=x;$("dlg").className="";$("frm").dataset.kind="bought";
+  $("frm").innerHTML=`<h2>Keypt: ${esc(x.name)}</h2><p class="hint" style="margin:0">${esc(x.size||"")}${x.supplier?" · "+esc(x.supplier):""} · á lager núna: ${+x.stock||0}</p>
+   <div class="fields">
+    <div class="f"><label for="b_qty">Fjöldi</label><input id="b_qty" type="number" inputmode="numeric" min="1" step="1" value="1"></div>
+    <div class="f"><label for="b_price">Verð á stykki (kr.)</label><input id="b_price" type="number" inputmode="numeric" min="0" value="${x.price||""}"></div>
+    <div class="f"><label for="b_date">Dagsetning</label><input id="b_date" type="date" value="${TODAY}"></div>
+    <div class="f"><span class="lbl">Samtals</span><b id="b_total" style="font-size:18px;font-variant-numeric:tabular-nums"></b></div>
+    <div class="f full"><label class="check"><input id="b_exp" type="checkbox" checked> Skrá í kostnað</label></div>
+   </div>
+   <p class="err" id="ferr" hidden></p>
+   <div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">Skrá innkaup</button></div>`;
+  syncBought();openDlg();
+}
+function syncBought(){const t=$("b_total");if(t)t.textContent=kr((+$("b_qty").value||0)*(+$("b_price").value||0))}
+async function saveBought(){
+  const x=buySupply,qty=Math.round(+$("b_qty").value||0),price=+$("b_price").value||0,date=$("b_date").value||TODAY;
+  if(qty<1){showErr("Skráðu fjölda.");return}
+  $("savebtn").disabled=true;
+  try{
+    const cur=S.supplies.find(s=>s.id===x.id)||x;
+    await S.db.doc("supplies/"+x.id).update({stock:(+cur.stock||0)+qty,price});
+    if($("b_exp").checked)await S.db.collection("expenses").add({date,supplier:x.supplier||"",description:`${x.name} (${qty}× ${x.size||"stk"})`,amount:qty*price,vat:VAT,supplyId:x.id,createdAt:Date.now()});
+    toast(`${x.name}: ${(+cur.stock||0)+qty} á lager${$("b_exp").checked?" · skráð í kostnað":""}`);$("dlg").close();
+  }catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+async function markOpened(id){
+  const x=S.supplies.find(s=>s.id===id);if(!x||!(+x.stock>0))return;
+  const left=(+x.stock||0)-1;
+  try{await S.db.doc("supplies/"+id).update({stock:left});toast(`${x.name}: ${left} eftir${left<=(+x.low||0)?" · þarf að panta":""}`)}catch(e){toast(failMsg(e))}
+}
+function openCallInfo(id){
+  const p=planOf(id);if(!p)return;const x={p,...planInfo(p)},c=custById(p.customerId)||{};
+  $("dlg").className="";$("frm").dataset.kind="info";
+  $("frm").innerHTML=`<div class="bar"><span class="pill gold">Hringja</span>${p.plate?`<span class="plate">${esc(p.plate)}</span>`:""}</div><h2>${esc(p.customerName)}</h2>
+   <dl class="kv"><dt>Sími</dt><dd>${c.phone?`<span class="sel" style="font-size:16px;font-weight:600">${esc(c.phone)}</span> · <a href="tel:${esc(c.phone.replace(/\s/g,""))}">hringja</a>`:'<span class="muted">Ekkert símanúmer skráð</span>'}</dd>
+    <dt>Bíll</dt><dd>${esc(p.model||p.plate||"—")}</dd>
+    <dt>Áskrift</dt><dd>${esc(svcName(p.service))} á ${p.interval} vikna fresti · ${kr(p.price)}</dd>
+    <dt>Síðast</dt><dd>${niceLong(x.last)}</dd><dt>Á að koma</dt><dd>um ${niceLong(x.due)}</dd>
+    ${x.late?`<dt>Staða</dt><dd><span class="pill bad">Átti að hringja ${nice(x.call)}</span></dd>`:""}</dl>
+   <div class="actions"><button type="button" class="btn" data-act="snooze" data-id="${esc(id)}">Fresta</button><span class="sp"></span><button type="button" class="btn primary" data-act="bookplan" data-id="${esc(id)}">Bóka tíma</button></div>`;
+  openDlg();
+}
+
+/* ---------- settings ---------- */
+function renderSettings(){
+  const st=S.settings,pr=st.prices,du=st.durations,d=st.discounts;
+  const grid=(pre,obj,step,ph)=>`<div class="prices"><span></span><span class="h">${SIZES.small}</span><span class="h">${SIZES.big}</span>${Object.keys(SERVICES).map(k=>`<span><b>${SERVICES[k].name}</b></span><input id="${pre}_${k}_small" type="number" inputmode="decimal" step="${step}" min="0" value="${obj[k]?.small||""}" placeholder="${ph}" aria-label="${SERVICES[k].name} lítill"><input id="${pre}_${k}_big" type="number" inputmode="decimal" step="${step}" min="0" value="${obj[k]?.big||""}" placeholder="${ph}" aria-label="${SERVICES[k].name} stór">`).join("")}</div>`;
+  return `<form id="setform" class="stack" novalidate>
+   <div class="grid2"><div class="panel"><h3>Verðskrá</h3><p class="hint" style="margin:0">Verðið fyllist sjálfkrafa inn í nýjar bókanir. Þú getur alltaf breytt verði á einstakri bókun.</p>${grid("p",pr,100,"kr.")}</div>
+   <div class="panel"><h3>Áætlaður vinnutími (klst)</h3><p class="hint" style="margin:0">Notað til að sýna hversu fullur hver dagur er.</p>${grid("t",du,0.5,"klst")}<div class="prices"><span><b>Vinnustundir á dag</b><br><span class="hint">allt starfsfólk samtals, t.d. 2 × 8 = 16</span></span><input id="dayhours" type="number" step="0.5" min="1" max="200" value="${st.dayHours}"><span class="hint">klst</span></div></div></div>
+   <div class="grid2"><div class="panel"><h3>Aukaþjónusta</h3><div class="f"><label for="s_extras">Ein lína fyrir hverja: nafn, verð</label><textarea id="s_extras" rows="5" style="font-family:var(--mono)" placeholder="Járnhreinsun, 6000&#10;Leðurmeðferð, 9900">${esc(st.extras.map(x=>x.name+(x.price?", "+x.price:"")).join("\n"))}</textarea></div>${st.extras.some(x=>!x.price)?'<span class="hint over">Verð vantar á einhverja aukaþjónustu.</span>':""}</div>
+   <div class="panel"><h3>Afsláttur á endurteknum bókunum</h3><div class="prices">${["4","6","8"].map(w=>`<span><b>Á ${w} vikna fresti</b></span><input id="d_${w}" type="number" min="0" max="50" value="${d[w]}" aria-label="Afsláttur ${w} vikur"><span class="hint">%</span>`).join("")}</div><p class="hint" style="margin:0">Afslátturinn reiknast á grunnverð, ekki aukaþjónustu.</p></div></div>
+   <div class="panel"><h3>Gátlistar</h3><p class="hint" style="margin:0">Eitt atriði í línu. Birtist á verkspjaldi hvers bíls undir „Í dag“.</p><div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">${Object.keys(SERVICES).map(k=>`<div class="f"><label for="cl_${k}">${SERVICES[k].name}</label><textarea id="cl_${k}" rows="10">${esc((st.checklists[k]||[]).join("\n"))}</textarea></div>`).join("")}</div></div>
+   <div class="panel"><h3>Starfsfólk</h3><p class="hint" style="margin:0">Vistast sjálfkrafa. Eitt nafn í línu. Hakað er við þessi nöfn þegar bíll fer Í vinnslu, og þau birtast þegar spurt er „Hver ert þú?“. Nýtt nafn sem er skrifað þegar byrjað er á bíl bætist líka sjálfkrafa hér við. Það er líka alltaf hægt að skrifa nafn sem er ekki á listanum.</p><div class="f"><label for="st_staff">Nöfn</label><textarea id="st_staff" rows="5" placeholder="Siggi&#10;Kata">${esc(staffList().join("\n"))}</textarea></div></div>
+   <div class="actions"><button class="btn primary" type="submit">Vista stillingar</button></div>
+   <div class="panel"><h3>Afrit af gögnum</h3>${backupAge()>7?`<div class="banner">${S.meta.lastBackup?`Síðasta afrit var tekið fyrir ${backupAge()} dögum.`:"Ekkert afrit hefur verið tekið."} Taktu afrit og geymdu það á öruggum stað, t.d. í iCloud eða Google Drive.</div>`:`<p style="margin:0">Síðasta afrit: ${dmy(iso(new Date(S.meta.lastBackup)))}.</p>`}<p class="hint" style="margin:0">Sækir allar bókanir, viðskiptavini, áskriftir, kostnað og stillingar í eina skrá. Gott að taka afrit reglulega${S.canImport?", og til að flytja gögn inn úr eldri útgáfu":", og þannig flytur þú gögnin yfir á vefsíðuna"}. Myndir fylgja ekki með.</p>
+    <div class="actions">${S.downloads?'<button type="button" class="btn" data-act="exportjson">Sækja afrit</button>':""}${S.canImport?'<label class="btn">Flytja inn afrit<input type="file" accept=".json,application/json" id="importfile" hidden></label>':""}</div></div>
+   <div class="panel"><h3>Gamlar myndir</h3><p class="hint" style="margin:0">Myndir eldri en ${PHOTO_MONTHS} mánaða má eyða til að spara pláss. Bókanirnar og ástandslýsingar haldast.</p><div id="photoscan"></div><div class="actions"><button type="button" class="btn" data-act="scanphotos">Athuga gamlar myndir</button></div></div>
+   <div class="panel"><h3>Ruslafata · ${S.trash.length}</h3><p class="hint" style="margin:0">Það sem er eytt geymist hér í ${TRASH_DAYS} daga og er svo eytt endanlega.</p>${S.trash.length?`<div>${[...S.trash].sort((a,b)=>b.deletedAt-a.deletedAt).map(x=>`<div class="trashrow"><div class="lb"><b>${esc(x.label)}</b><br><span class="hint">Eytt ${dmy(iso(new Date(x.deletedAt)))}${x.deletedBy?" af "+esc(x.deletedBy):""} · eyðist endanlega eftir ${Math.max(0,TRASH_DAYS-Math.floor((Date.now()-x.deletedAt)/864e5))} daga</span></div><button type="button" class="btn small" data-act="restore" data-id="${esc(x.id)}">Endurheimta</button><button type="button" class="btn small danger" data-act="purgeone" data-id="${esc(x.id)}">Eyða strax</button></div>`).join("")}</div>`:'<p class="muted" style="margin:0">Ruslafatan er tóm.</p>'}</div>
+   ${signOutAll?`<div class="panel"><h3>Öryggi</h3><p class="hint" style="margin:0">Allir nota sama aðganginn. Ef sími týnist eða starfsmaður hættir: skráðu út öll tæki og breyttu svo lykilorðinu í Supabase.</p><div class="actions">${logout?'<button type="button" class="btn" data-act="logout">Skrá út af þessu tæki</button>':""}<button type="button" class="btn danger" data-act="signoutall">Skrá út öll tæki</button></div></div>`:""}</form>`;
+}
+
+let renderPending=false,dirtyForm=null;
+/* renders caused by data arriving from other phones skip the page while a form there has unsaved typing */
+function dataRender(){if(dirtyForm&&$(dirtyForm)){renderStats();renderWho();return}render()}
+function render(){
+  renderStats();renderWho();if(S.ready&&!autoPurge.done)setTimeout(autoPurge,1500);
+  const a=document.activeElement;
+  if(a&&a.closest&&a.closest("#view")&&(a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&!["checkbox","file","search"].includes(a.type)))){renderPending=true;return}
+  renderPending=false;
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===S.tab));
+  const v=$("view");
+  v.innerHTML=S.tab==="idag"?renderToday():S.tab==="dagskra"?renderSchedule():S.tab==="vidskiptavinir"?renderCustomers():S.tab==="askriftir"?renderPlans():S.tab==="tekjur"?renderRevenue():S.tab==="efni"?renderSupplies():renderSettings();
+  const q=$("q");if(q&&render.focusQ){q.focus();q.setSelectionRange(q.value.length,q.value.length)}
+}
+document.addEventListener("focusout",()=>{if(renderPending)setTimeout(()=>{if(renderPending)render()},0)});
+
+/* ---------- booking dialog ---------- */
+let edit=null,priceDirty=false,priceFromPlan=false,pickupTouched=false,formPlan=null,repeatOk="0";
+function openBooking(b,date,preset){
+  edit=b||null;priceFromPlan=!b&&!!(preset&&preset.price!=null);priceDirty=!!b||priceFromPlan;pickupTouched=!!b;formPlan=null;repeatOk="0";
+  const x=b||{date:date||TODAY,time:"09:00",service:"detail",size:"small",status:"bokad",pickup:true,paid:false,...(preset||{})};
+  const chosen=(x.extras||[]).map(e=>e.name);
+  const extras=[...S.settings.extras];(x.extras||[]).forEach(e=>{if(!extras.some(s=>s.name===e.name))extras.push(e)});
+  const custOpts=[...S.customers].sort((a,c)=>(a.name||"").localeCompare(c.name||"","is")).map(c=>`<option value="${esc(c.id)}"${c.id===x.customerId?" selected":""}>${esc(c.name)}${c.phone?" · "+esc(c.phone):""}</option>`).join("");
+  $("dlg").className="";$("frm").dataset.kind="booking";
+  $("frm").innerHTML=`<div class="bar"><h2>${b?"Breyta bókun":"Ný bókun"}</h2>${b?planPill(b):""}</div>
+  <div class="fields">
+   <div class="f full"><label for="f_cust">Viðskiptavinur</label><select id="f_cust"><option value="__new"${x.customerId?"":" selected"}>+ Nýr viðskiptavinur</option>${custOpts}</select></div>
+   <div class="f" data-new><label for="f_name">Nafn</label><input id="f_name" autocomplete="off"></div>
+   <div class="f" data-new><label for="f_phone">Sími</label><input id="f_phone" inputmode="tel" autocomplete="off"></div>
+   <div class="f full" id="carchips" hidden></div>
+   <div class="f"><label for="f_plate">Bílnúmer</label><input id="f_plate" list="platelist" value="${esc(x.plate||"")}" placeholder="t.d. AB123" autocomplete="off" style="font-family:var(--mono);text-transform:uppercase"><datalist id="platelist"></datalist></div>
+   <div class="f"><label for="f_model">Tegund</label><input id="f_model" value="${esc(x.model||"")}" placeholder="t.d. Range Rover Sport"></div>
+   <div class="f"><label for="f_service">Þjónusta</label><select id="f_service">${Object.keys(SERVICES).map(k=>`<option value="${k}"${k===x.service?" selected":""}>${SERVICES[k].name}</option>`).join("")}</select></div>
+   <div class="f"><label for="f_size">Stærð</label><select id="f_size">${Object.keys(SIZES).map(k=>`<option value="${k}"${k===x.size?" selected":""}>${SIZES[k]}</option>`).join("")}</select></div>
+   ${extras.length?`<div class="f full"><span class="lbl">Aukaþjónusta</span><div class="extras">${extras.map((e,i)=>`<label class="check"><input type="checkbox" data-extra="${i}" data-name="${esc(e.name)}" data-price="${+e.price||0}"${chosen.includes(e.name)?" checked":""}> ${esc(e.name)} <span class="muted">${e.price?"+ "+kr(e.price):"verð vantar"}</span></label>`).join("")}</div></div>`:""}
+   <div class="f"><label for="f_date">Dagsetning</label><input id="f_date" type="date" value="${esc(x.date)}"></div>
+   <div class="f"><label for="f_time">Tími</label><input id="f_time" type="time" step="900" value="${esc(x.time||"")}"></div>
+   <div class="f full"><span class="hint" id="loadhint"></span><span class="hint" id="carhint"></span></div>
+   <div class="f full"><label class="check"><input id="f_pickup" type="checkbox"${x.pickup?" checked":""}> Sótt og skilað</label></div>
+   <div class="f full" id="addrwrap"><label for="f_addr">Heimilisfang fyrir sótt/skilað</label><input id="f_addr" value="${esc(x.address||"")}"></div>
+   ${b?"":`<div class="f full"><label for="f_repeat">Endurtaka</label><select id="f_repeat"><option value="0">Nei, stök bókun</option>${["4","6","8"].map(w=>`<option value="${w}">Á ${w} vikna fresti (−${S.settings.discounts[w]}%)</option>`).join("")}</select><span class="planhint" id="planhint"></span></div>`}
+   <div class="f"><label for="f_price">Verð (kr.)</label><input id="f_price" type="number" inputmode="numeric" step="100" min="0" value="${x.price??""}"><span class="hint" id="pricehint"></span></div>
+   <div class="f"><label for="f_status">Staða</label><select id="f_status">${Object.keys(STATUSES).map(k=>`<option value="${k}"${k===(x.status||"bokad")?" selected":""}>${STATUSES[k]}</option>`).join("")}</select></div>
+   <div class="f full"><label class="check"><input id="f_paid" type="checkbox"${x.paid?" checked":""}> Rukkað <span class="muted">(merkt af skrifstofu)</span></label></div>
+   <div class="f full"><label for="f_notes">Athugasemdir</label><textarea id="f_notes" placeholder="t.d. hundahár í skotti, lyklar í lyklaboxi">${esc(x.notes||"")}</textarea></div>
+  </div>
+  <p class="err" id="ferr" hidden></p>
+  <div class="actions">${b?'<button type="button" class="btn danger" data-act="askdel">Eyða</button><button type="button" class="btn danger" data-act="dodel" hidden>Staðfesta eyðingu</button><button type="button" class="btn" data-act="tojob">Verkspjald</button>':""}<span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">${b?"Vista":"Bóka"}</button></div>`;
+  syncBookingForm();
+  openDlg();
+}
+const chosenExtras=()=>[...document.querySelectorAll("[data-extra]:checked")].map(i=>({name:i.dataset.name,price:+i.dataset.price||0}));
+function syncBookingForm(){
+  const cid=$("f_cust").value;
+  document.querySelectorAll("[data-new]").forEach(el=>el.hidden=cid!=="__new");
+  const c=custById(cid);
+  const cars=c&&c.cars||[];
+  $("platelist").innerHTML=cars.map(x=>`<option value="${esc(x.plate)}">${esc(x.model||"")}</option>`).join("");
+  if(cars.length===1&&!$("f_plate").value){$("f_plate").value=cars[0].plate;if(cars[0].model)$("f_model").value=cars[0].model;if(cars[0].size)$("f_size").value=cars[0].size}
+  const cur=$("f_plate").value.trim().toUpperCase().replace(/\s+/g,""),cc=$("carchips");
+  cc.hidden=!cars.length;
+  cc.innerHTML=cars.length?`<span class="lbl">Bílar viðskiptavinar · veldu einn</span><div class="meta">${cars.map(x=>`<button type="button" class="chip${x.plate===cur?" on":""}" data-act="pickcar" data-plate="${esc(x.plate)}">${esc(x.plate)}${x.model?`<small>${esc(x.model)}</small>`:""}</button>`).join("")}</div>`:"";
+  $("addrwrap").hidden=!$("f_pickup").checked;
+  if(c&&!$("f_addr").value&&c.address)$("f_addr").value=c.address;
+  if($("f_repeat")){
+    const p=c?findPlan(c.id,cur):null;
+    if(p!==formPlan){formPlan=p;repeatOk=p?String(p.interval):"0";$("f_repeat").value=repeatOk;
+      /* an áskrift keeps its own price until you choose to update it */
+      if(p&&p.price&&$("f_service").value===p.service&&$("f_size").value===(p.size||"small")&&!(priceDirty&&!priceFromPlan)){$("f_price").value=p.price;priceDirty=true;priceFromPlan=true}}
+    const r=$("f_repeat").value;
+    $("planhint").textContent=!p?"":r===String(p.interval)?`Bíllinn er í áskrift á ${p.interval} vikna fresti. Bókunin bætist við hana.`:r==="0"?`Stök bókun utan áskriftar. Áskriftin á ${p.interval} vikna fresti heldur áfram.`:`Áskriftinni verður breytt úr ${p.interval} í ${r} vikur.`;
+  }
+  const svc=$("f_service").value,size=$("f_size").value,rep=$("f_repeat")?$("f_repeat").value:"0";
+  const base=priceFor(svc,size),disc=rep!=="0"?+S.settings.discounts[rep]||0:0,ex=chosenExtras(),exT=sum(ex,e=>e.price);
+  if(!priceDirty)$("f_price").value=base||exT?round100(base*(1-disc/100))+exT:"";
+  $("pricehint").textContent=(priceFromPlan&&formPlan?"Áskriftarverð: "+kr(formPlan.price)+" · ":formPlan&&$("f_service").value!==formPlan.service?"Önnur þjónusta en í áskriftinni · ":"")+(base?"Verðskrá: "+kr(base)+(disc?" · −"+disc+"% áskrift":"")+(exT?" · aukaþjónusta "+kr(exT):""):"Ekkert verð í verðskrá fyrir þessa þjónustu");
+  const d=$("f_date").value,dur=durFor(svc,size),cap=S.settings.dayHours;
+  if(d){const used=S.bookings.filter(b=>b.date===d&&live(b)&&(!edit||b.id!==edit.id)).reduce((a,b)=>a+hoursOf(b),0);
+    const ca=carAvg(cur,edit&&edit.id);$("carhint").textContent=ca?` Meðaltími á þennan bíl: ${fmtMin(ca.avg)} (${ca.n} skipti).`:"";
+    const tot=used+dur,el=$("loadhint");el.textContent=`Áætlaður tími ≈ ${hrs(dur)} klst. ${niceLong(d)}: ${hrs(tot)} af ${hrs(cap)} klst bókaðar${tot>cap?" — dagurinn verður yfirbókaður":""}.`;el.className="hint"+(tot>cap?" over":"")}
+}
+function fillCar(){
+  const c=custById($("f_cust").value);if(!c)return;
+  const car=(c.cars||[]).find(x=>x.plate===$("f_plate").value.trim().toUpperCase().replace(/\s+/g,""));
+  if(car){if(car.model)$("f_model").value=car.model;if(car.size)$("f_size").value=car.size}
+  syncBookingForm();
+}
+const SIZE_OPTS=v=>Object.keys(SIZES).map(k=>`<option value="${k}"${k===(v||"small")?" selected":""}>${SIZES[k]}</option>`).join("");
+const carRow=x=>`<div class="carrow"><input class="cr-plate" placeholder="Bílnúmer" aria-label="Bílnúmer" value="${esc(x.plate||"")}" autocomplete="off"><input class="cr-model" placeholder="Tegund, t.d. Defender 110" aria-label="Tegund" value="${esc(x.model||"")}"><select class="cr-size" aria-label="Stærð">${SIZE_OPTS(x.size)}</select><button type="button" class="xbtn" data-act="rmcar" aria-label="Fjarlægja bíl">×</button><input class="cr-notes" placeholder="Um bílinn, t.d. keramikhúð, leðursæti, viðkvæmt lakk" aria-label="Athugasemd um bílinn" value="${esc(x.notes||"")}"></div>`;
+const normPlate=s=>s.trim().toUpperCase().replace(/\s+/g,"");
+function showErr(m){const e=$("ferr");if(!e)return toast(m);e.textContent=m;e.hidden=!m}
+const stripId=o=>{const{id,...r}=o;return r};
+
+async function saveBooking(){
+  if(!S.db){showErr("Gagnageymslan er ekki tengd í þessari skoðun.");return}
+  const v=id=>$(id)?$(id).value.trim():"";
+  let cid=v("f_cust");const plate=v("f_plate").toUpperCase().replace(/\s+/g,""),model=v("f_model"),size=v("f_size"),addr=$("f_pickup").checked?v("f_addr"):"";
+  if(cid==="__new"&&!v("f_name")){showErr("Skráðu nafn viðskiptavinar.");$("f_name").focus();return}
+  if(!v("f_date")){showErr("Veldu dagsetningu.");return}
+  $("savebtn").disabled=true;showErr("");
+  try{
+    let name;
+    if(cid==="__new"){
+      name=v("f_name");const ref=S.db.collection("customers").doc();
+      await ref.set({name,phone:v("f_phone"),email:"",address:addr,notes:"",cars:plate?[{plate,model,size}]:[],createdAt:Date.now()});cid=ref.id;
+    }else{
+      const c=custById(cid);name=c?c.name:"";
+      if(c){const upd={};const cars=(c.cars||[]).map(x=>({...x}));
+        if(plate){const i=cars.findIndex(x=>x.plate===plate);
+          if(i<0){cars.push({plate,model,size});upd.cars=cars}
+          else if((model&&cars[i].model!==model)||cars[i].size!==size){cars[i]={...cars[i],plate,model:model||cars[i].model,size};upd.cars=cars}}
+        if(addr&&!c.address)upd.address=addr;
+        if(Object.keys(upd).length)await S.db.doc("customers/"+cid).update(upd)}
+    }
+    const svc=v("f_service");
+    const body={customerId:cid,customerName:name,plate,model,size,service:svc,extras:chosenExtras(),hours:durFor(svc,size),date:v("f_date"),time:v("f_time"),pickup:$("f_pickup").checked,address:addr,price:+v("f_price")||0,status:v("f_status"),paid:$("f_paid").checked,notes:v("f_notes"),updatedAt:Date.now()};
+    const rep=$("f_repeat")?+$("f_repeat").value:0;
+    if(edit){await S.db.doc("bookings/"+edit.id).update(body);toast("Bókun vistuð")}
+    else{
+      /* one booking at a time; an áskrift only sets when to call next */
+      const p=formPlan&&planOf(formPlan.id)&&formPlan.customerId===cid?planOf(formPlan.id):null;
+      let planId=null,msg="Bókað";
+      const planFields={plate,model,size,service:svc,extras:body.extras,hours:body.hours,price:body.price,time:body.time,pickup:body.pickup,address:addr,snoozeUntil:null};
+      if(p&&rep){
+        planId=p.id;
+        /* a different service this time (e.g. söluþrif) counts as the visit but does not change the áskrift's own service or price */
+        const same=svc===p.service&&size===(p.size||"small");
+        const upd=same?{...planFields}:{time:body.time,pickup:body.pickup,address:addr,snoozeUntil:null};
+        if(rep!==+p.interval){upd.interval=rep;upd.discount=+S.settings.discounts[rep]||0;msg=`Bókað. Áskrift breytt í ${rep} vikur`}else msg=same?"Bókað í áskrift":"Bókað. Áskriftin heldur sinni þjónustu og verði";
+        await S.db.doc("plans/"+p.id).update(upd);
+      }else if(rep){
+        const pref=S.db.collection("plans").doc();
+        await pref.set({customerId:cid,customerName:name,...planFields,interval:rep,discount:+S.settings.discounts[rep]||0,startDate:body.date,active:true,createdAt:Date.now()});
+        planId=pref.id;const cd=addDays(body.date,(rep-1)*7);msg=cd<=TODAY?"Bókað og áskrift skráð. Áminning um að hringja er komin á Í dag":`Bókað og áskrift skráð. Áminning um að hringja kemur ${nice(cd)}`;
+      }
+      await S.db.collection("bookings").add({...body,planId,createdBy:who(),createdAt:Date.now()});
+      toast(msg);
+    }
+    $("dlg").close();
+  }catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+
+/* ---------- customer dialog ---------- */
+let editCust=null;
+function openCustomer(c){
+  editCust=c||null;saveCustomer.ok=false;
+  const hist=c?S.bookings.filter(b=>b.customerId===c.id).sort((a,b)=>b.date.localeCompare(a.date)):[];
+  $("dlg").className="";$("frm").dataset.kind="customer";
+  $("frm").innerHTML=`<h2>${c?esc(c.name):"Nýr viðskiptavinur"}</h2>
+  <div class="fields">
+   <div class="f"><label for="c_name">Nafn</label><input id="c_name" value="${esc(c?.name||"")}"></div>
+   <div class="f"><label for="c_phone">Sími</label><input id="c_phone" inputmode="tel" value="${esc(c?.phone||"")}"></div>
+   <div class="f"><label for="c_email">Netfang</label><input id="c_email" type="email" value="${esc(c?.email||"")}"></div>
+   <div class="f"><label for="c_addr">Heimilisfang</label><input id="c_addr" value="${esc(c?.address||"")}"></div>
+   <div class="f"><label for="c_kt">Kennitala <span class="muted">(fyrir kvittanir, valfrjálst)</span></label><input id="c_kt" inputmode="numeric" value="${esc(c?.kt||"")}"></div>
+   <div class="f full"><span class="lbl">Bílar · ${(c?.cars||[]).length||"enginn enn"}</span><div class="cars" id="carrows">${((c?.cars||[]).length?c.cars:[{}]).map(carRow).join("")}</div><div><button type="button" class="btn small" data-act="addcar">+ Bæta við bíl</button></div></div>
+   <div class="f full"><label for="c_notes">Athugasemdir</label><textarea id="c_notes" placeholder="t.d. kóði að hliði, vill ekki ilm í bílinn">${esc(c?.notes||"")}</textarea></div>
+  </div>
+  ${c?`<div class="f"><span class="lbl">Saga · ${hist.length} bókanir</span><div class="hist">${hist.map(b=>`<div class="row"><span>${niceLong(b.date)}</span><span class="pill svc-${esc(b.service)}">${esc(svcName(b.service))}</span>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}${(b.photos||[]).length?`<span class="pill">${b.photos.length} myndir</span>`:""}<span class="price ${b.paid?"":"unpaid"}">${kr(b.price)}</span></div>`).join("")||'<span class="muted">Engar bókanir síðustu 12 mánuði.</span>'}<div id="oldhist"></div></div>${customerHistory?`<div><button type="button" class="btn small" data-act="oldhist" data-id="${esc(c.id)}">Sýna eldri heimsóknir</button></div>`:""}</div>`:""}
+  <p class="err" id="ferr" hidden></p>
+  <div class="actions">${c?`<button type="button" class="btn danger" data-act="askdelcust">Eyða</button><button type="button" class="btn danger" data-act="dodelcust" hidden>Staðfesta: eyða öllu um viðskiptavininn</button><button type="button" class="btn" data-act="bookfor" data-id="${esc(c.id)}">Bóka tíma</button>`:""}<span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">Vista</button></div>`;
+  openDlg();
+}
+async function saveCustomer(){
+  if(!S.db){showErr("Gagnageymslan er ekki tengd í þessari skoðun.");return}
+  const name=$("c_name").value.trim();if(!name){showErr("Skráðu nafn.");return}
+  const cars=[...document.querySelectorAll("#carrows .carrow")].map(r=>({plate:normPlate(r.querySelector(".cr-plate").value),model:r.querySelector(".cr-model").value.trim(),size:r.querySelector(".cr-size").value,notes:r.querySelector(".cr-notes").value.trim()})).filter(x=>x.plate);
+  const dup=cars.find((x,i)=>cars.findIndex(y=>y.plate===x.plate)!==i);
+  if(dup){showErr("Bílnúmerið "+dup.plate+" er skráð tvisvar.");return}
+  const other=S.customers.find(o=>o.id!==editCust?.id&&(o.cars||[]).some(x=>cars.some(y=>y.plate===x.plate)));
+  if(other&&!saveCustomer.ok){saveCustomer.ok=true;showErr("Athugaðu: eitt bílnúmerið er líka skráð á "+other.name+". Smelltu aftur á Vista til að halda áfram.");return}
+  saveCustomer.ok=false;
+  const body={name,phone:$("c_phone").value.trim(),email:$("c_email").value.trim(),address:$("c_addr").value.trim(),kt:$("c_kt").value.trim(),notes:$("c_notes").value.trim(),cars};
+  $("savebtn").disabled=true;
+  try{
+    if(editCust){await S.db.doc("customers/"+editCust.id).update(body);
+      if(editCust.name!==name){for(const b of S.bookings.filter(b=>b.customerId===editCust.id))await S.db.doc("bookings/"+b.id).update({customerName:name});for(const p of S.plans.filter(p=>p.customerId===editCust.id))await S.db.doc("plans/"+p.id).update({customerName:name})}}
+    else await S.db.collection("customers").add({...body,createdAt:Date.now()});
+    toast("Viðskiptavinur vistaður");$("dlg").close();
+  }catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+
+/* ---------- confirm & photo dialogs ---------- */
+let confirmFn=null,photoRef=null;
+function ask(title,text,btn,fn){
+  confirmFn=fn;$("dlg").className="";$("frm").dataset.kind="confirm";
+  $("frm").innerHTML=`<h2>${esc(title)}</h2><p style="margin:0">${esc(text)}</p><p class="err" id="ferr" hidden></p><div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">${esc(btn)}</button></div>`;
+  openDlg();
+}
+function openPhoto(bid,pid){
+  const b=S.bookings.find(x=>x.id===bid),p=(b?.photos||[]).find(x=>x.id===pid);if(!b||!p)return;
+  photoRef={bid,pid};$("dlg").className="wide";$("frm").dataset.kind="photo";
+  $("frm").innerHTML=`<div class="bar"><h2>${p.kind==="fyrir"?"Fyrir":"Eftir"}</h2>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}<span class="muted">${esc(b.customerName)} · ${niceLong(b.date)}</span></div><img class="bigimg" src="${esc(photoSrc(pid))}" alt="Mynd ${esc(p.kind)}"><p class="err" id="ferr" hidden></p><div class="actions">${S.assets?'<button type="button" class="btn danger" data-act="askdelph">Eyða mynd</button><button type="button" class="btn danger" data-act="dodelph" hidden>Staðfesta eyðingu</button>':""}<span class="sp"></span><button type="button" class="btn primary" data-act="close">Loka</button></div>`;
+  openDlg();
+}
+
+/* ---------- photos ---------- */
+/* photos are stored at 1280 px (sharp enough for scratches) plus a small 320 px copy for thumbnails */
+async function shrink(file,max=1280,q=0.72){
+  try{const bmp=await createImageBitmap(file);const s=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas");c.width=Math.round(bmp.width*s);c.height=Math.round(bmp.height*s);c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(b=>r(b||file),"image/jpeg",q));}catch(e){return max<1000?null:file}
+}
+async function uploadPhotos(input){
+  const bid=input.dataset.up,kind=input.dataset.kind,files=[...input.files];if(!files.length||!S.assets)return;
+  const lab=$("up-"+bid+"-"+kind);if(lab){lab.classList.add("busy");lab.firstChild.textContent="Hleð…"}
+  const added=[];
+  try{for(const f of files){const blob=await shrink(f);const r=await S.assets.upload(blob,blob.type?undefined:{type:"image/jpeg"});
+    const tb=await shrink(f,320,0.7);let tid=null;if(tb){try{tid=(await S.assets.upload(tb,tb.type?undefined:{type:"image/jpeg"})).id}catch(e){}}
+    added.push({id:r.id,...(tid?{tid}:{}),kind,at:Date.now()})}}
+  catch(e){toast(failMsg(e))}
+  if(added.length){const b=S.bookings.find(x=>x.id===bid);
+    try{await S.db.doc("bookings/"+bid).update({photos:[...(b?.photos||[]),...added]});toast(added.length===1?"Mynd vistuð":added.length+" myndir vistaðar")}catch(e){toast(failMsg(e))}}
+  render();
+}
+
+/* ---------- plans ---------- */
+function stopPlan(id){
+  const p=S.plans.find(x=>x.id===id);if(!p)return;
+  ask("Stöðva áskrift?",`${p.customerName}: engar fleiri áminningar um að hringja. Bókanir sem eru þegar skráðar haldast.`,"Stöðva áskrift",async()=>{
+    await S.db.doc("plans/"+id).update({active:false,stoppedAt:Date.now()});toast("Áskrift stöðvuð")});
+}
+function delPlan(id){
+  const p=S.plans.find(x=>x.id===id);if(!p)return;
+  ask("Eyða áskrift?",`${p.customerName}: áskriftin fer í ruslafötu í 30 daga og engar fleiri áminningar koma. Bókanir sem eru þegar skráðar haldast.`,"Eyða áskrift",async()=>{
+    await toTrash(`Áskrift: ${p.customerName}${p.plate?" · "+p.plate:""} · á ${p.interval} vikna fresti`,{items:[{collection:"plans",id,data:stripId(p)}]});
+    await S.db.doc("plans/"+id).delete();toast("Áskrift sett í ruslafötu")});
+}
+/* "Ertu viss?" when the áskrift interval is changed in Ný bókun */
+function askRepeat(val){
+  const p=formPlan;if(!p)return;
+  const to=val==="0"?"stök bókun":`á ${val} vikna fresti`;
+  $("frm2").innerHTML=`<h2>Ertu viss?</h2><p style="margin:0">${val==="0"?`${esc(p.customerName)} er í áskrift á ${p.interval} vikna fresti. Þessi bókun verður stök bókun utan áskriftar, en áskriftin heldur áfram óbreytt.`:`Áskrift ${esc(p.customerName)}${p.plate?" ("+esc(p.plate)+")":""} verður breytt úr ${p.interval} í ${val} vikur. Afslátturinn verður ${S.settings.discounts[val]}% og áminningar miðast við nýja tíðni.`}</p>
+   <div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="repno">Nei, halda ${p.interval} vikum</button><button type="button" class="btn primary" data-act="repyes" data-v="${esc(val)}">Já, ${esc(to)}</button></div>`;
+  askRepeat.pending=true;$("dlg2").showModal();
+}
+$("dlg2").addEventListener("close",()=>{if(askRepeat.pending){askRepeat.pending=false;if($("f_repeat")){$("f_repeat").value=repeatOk;syncBookingForm()}}});
+async function dropPhotos(list){if(!S.assets)return;for(const p of list||[]){for(const id of [p.id,p.tid].filter(Boolean)){try{await S.assets.delete(id)}catch(e){}}}}
+const ANON={customerName:"Eyddur viðskiptavinur",plate:"",model:"",address:"",notes:"",damage:"",keys:"",where:"",kmIn:"",kmOut:"",photos:[]};
+async function delCustomer(c){
+  if(!c)return;
+  const mine=S.bookings.filter(b=>b.customerId===c.id),plans=S.plans.filter(p=>p.customerId===c.id);
+  const gone=mine.filter(b=>b.date>TODAY&&!b.paid),kept=mine.filter(b=>!(b.date>TODAY&&!b.paid));
+  const items=[{collection:"customers",id:c.id,data:stripId(c)},...gone.map(b=>({collection:"bookings",id:b.id,data:stripId(b)})),...plans.map(p=>({collection:"plans",id:p.id,data:stripId(p)}))];
+  const patches=kept.map(b=>({collection:"bookings",id:b.id,before:Object.fromEntries(Object.keys(ANON).map(k=>[k,b[k]??(k==="photos"?[]:"")]))}));
+  await toTrash("Viðskiptavinur: "+c.name,{items,patches,photos:mine.flatMap(b=>b.photos||[])});
+  for(const b of gone)await S.db.doc("bookings/"+b.id).delete();
+  for(const b of kept)await S.db.doc("bookings/"+b.id).update(ANON);
+  for(const p of plans)await S.db.doc("plans/"+p.id).delete();
+  await S.db.doc("customers/"+c.id).delete();
+}
+/* ---------- ruslafata: deleted things can be restored for 30 days ---------- */
+const TRASH_DAYS=30;
+async function toTrash(label,{items=[],patches=[],photos=[]}){
+  await S.db.collection("trash").add({label,deletedAt:Date.now(),deletedBy:who(),items,patches,photos:(photos||[]).flatMap(p=>p&&p.id?[p.id,p.tid].filter(Boolean):[p])});
+}
+async function restoreTrash(id){
+  const x=S.trash.find(z=>z.id===id);if(!x)return;
+  try{
+    for(const it of x.items||[])await S.db.collection(it.collection).doc(it.id).set(it.data);
+    for(const pt of x.patches||[]){try{await S.db.doc(pt.collection+"/"+pt.id).update(pt.before)}catch(e){}}
+    await S.db.doc("trash/"+id).delete();toast("Endurheimt: "+x.label);
+  }catch(e){toast(failMsg(e))}
+}
+async function purgeTrash(x){await dropPhotos((x.photos||[]).map(id=>({id})));await S.db.doc("trash/"+x.id).delete()}
+async function autoPurge(){
+  if(autoPurge.done||!S.db)return;autoPurge.done=true;
+  const old=S.trash.filter(x=>x.deletedAt<Date.now()-TRASH_DAYS*864e5);
+  for(const x of old){try{await purgeTrash(x)}catch(e){}}
+}
+/* ---------- expenses ---------- */
+let editExp=null;
+function openExpense(x){
+  if(!x)return;editExp=x;$("dlg").className="";$("frm").dataset.kind="expense";
+  const v=x.vat==null?VAT:+x.vat;
+  $("frm").innerHTML=`<h2>Breyta kostnaði</h2><div class="fields">
+   <div class="f"><label for="x_date">Dagsetning</label><input id="x_date" type="date" value="${esc(x.date||TODAY)}"></div>
+   <div class="f"><label for="x_sup">Birgir</label><input id="x_sup" value="${esc(x.supplier||"")}"></div>
+   <div class="f full"><label for="x_desc">Lýsing</label><input id="x_desc" value="${esc(x.description||"")}"></div>
+   <div class="f"><label for="x_amt">Upphæð með VSK (kr.)</label><input id="x_amt" type="number" inputmode="numeric" min="0" value="${x.amount??""}"></div>
+   <div class="f"><label for="x_vat">VSK</label><select id="x_vat">${[[24,"24%"],[11,"11%"],[0,"Enginn"]].map(([n,l])=>`<option value="${n}"${n===v?" selected":""}>${l}</option>`).join("")}</select></div></div>
+   <p class="err" id="ferr" hidden></p>
+   <div class="actions"><button type="button" class="btn danger" data-act="askdelexp">Eyða</button><button type="button" class="btn danger" data-act="dodelexp" hidden>Staðfesta eyðingu</button><span class="sp"></span><button type="button" class="btn" data-act="close">Hætta við</button><button type="submit" class="btn primary" id="savebtn">Vista</button></div>`;
+  openDlg();
+}
+async function saveExpense(){
+  const amount=+$("x_amt").value,date=$("x_date").value;
+  if(!amount||!date){showErr("Skráðu dagsetningu og upphæð.");return}
+  $("savebtn").disabled=true;
+  try{await S.db.doc("expenses/"+editExp.id).update({date,supplier:$("x_sup").value.trim(),description:$("x_desc").value.trim(),amount,vat:+$("x_vat").value});toast("Kostnaður vistaður");$("dlg").close()}
+  catch(e){showErr(failMsg(e));$("savebtn").disabled=false}
+}
+/* ---------- search ---------- */
+function openSearch(q){
+  q=q.trim();if(!q)return;
+  const np=normPlate(q),lq=q.toLowerCase();
+  const custs=S.customers.filter(c=>(c.cars||[]).some(x=>x.plate.includes(np))||(c.name||"").toLowerCase().includes(lq)||(c.phone||"").replace(/\s/g,"").includes(q.replace(/\s/g,"")));
+  const ids=new Set(custs.map(c=>c.id));
+  const books=S.bookings.filter(b=>(np&&(b.plate||"").includes(np))||ids.has(b.customerId)).sort((a,b)=>b.date.localeCompare(a.date));
+  $("dlg").className="";$("frm").dataset.kind="info";openSearch.q=q;
+  $("frm").innerHTML=`<h2>Leit: ${esc(q)}</h2>
+   <span class="lbl">Viðskiptavinir · ${custs.length}</span><div class="reslist">${custs.map(c=>`<button type="button" class="resrow" data-act="opencust" data-id="${esc(c.id)}"><b>${esc(c.name)}</b><span class="meta">${(c.cars||[]).map(x=>`<span class="plate">${esc(x.plate)}</span>`).join("")}</span><span class="hint">${esc(c.phone||"")}</span></button>`).join("")||'<p class="muted">Enginn fannst.</p>'}</div>
+   <span class="lbl">Heimsóknir${searchOld?" síðustu 12 mánuði":""} · ${books.length}</span><div class="reslist">${books.map(resRow).join("")||'<p class="muted">Engar heimsóknir fundust.</p>'}</div>
+   <div id="oldres"></div>${searchOld?'<div><button type="button" class="btn small" data-act="oldsearch">Leita líka í eldri gögnum</button></div>':""}`;
+  openDlg();
+}
+const resRow=(b,stat)=>`<${stat?"div":"button type=\"button\""} class="resrow${stat?" static":""}"${stat?"":` data-act="edit" data-id="${esc(b.id)}"`}><b>${niceLong(b.date)}${b.date.slice(0,4)!==TODAY.slice(0,4)?" "+b.date.slice(0,4):""}</b>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}<span>${esc(b.customerName||"")}</span><span class="pill svc-${esc(b.service)}">${esc(svcName(b.service))}</span><span class="hint">${STATUSES[b.status]||""}</span><span class="price">${kr(b.price)}</span></${stat?"div":"button"}>`;
+async function runOldSearch(btn){
+  btn.disabled=true;btn.textContent="Leita…";
+  try{const r=await searchOld(openSearch.q);$("oldres").innerHTML=`<span class="lbl">Eldri en 12 mánaða · ${r.length}</span><div class="reslist">${r.sort((a,b)=>b.date.localeCompare(a.date)).map(b=>resRow(b,true)).join("")||'<p class="muted">Ekkert eldra fannst.</p>'}</div>`;btn.remove()}
+  catch(e){btn.disabled=false;btn.textContent="Leita líka í eldri gögnum";toast(failMsg(e))}
+}
+async function showOldHistory(cid,btn){
+  btn.disabled=true;btn.textContent="Sæki…";
+  try{const r=await customerHistory(cid);$("oldhist").innerHTML=r.length?r.sort((a,b)=>b.date.localeCompare(a.date)).map(b=>`<div class="row"><span>${niceLong(b.date)} ${b.date.slice(0,4)}</span><span class="pill svc-${esc(b.service)}">${esc(svcName(b.service))}</span>${b.plate?`<span class="plate">${esc(b.plate)}</span>`:""}<span class="price">${kr(b.price)}</span></div>`).join(""):'<span class="muted">Engar eldri heimsóknir.</span>';btn.remove()}
+  catch(e){btn.disabled=false;btn.textContent="Sýna eldri heimsóknir";toast(failMsg(e))}
+}
+/* ---------- photo clean-up (older than 12 months) ---------- */
+const PHOTO_MONTHS=12;
+async function oldPhotoBookings(){
+  const cutoff=addDays(TODAY,-365);
+  const map=new Map();
+  S.bookings.filter(b=>b.date<cutoff&&(b.photos||[]).length).forEach(b=>map.set(b.id,b));
+  if(fetchOldPhotos)(await fetchOldPhotos(cutoff)).forEach(b=>map.set(b.id,b));
+  return[...map.values()];
+}
+async function scanPhotos(btn){
+  btn.disabled=true;btn.textContent="Athuga…";
+  try{const list=await oldPhotoBookings(),n=sum(list,b=>(b.photos||[]).length);scanPhotos.list=list;
+    $("photoscan").innerHTML=n?`<p style="margin:0"><b>${n} myndir</b> á ${list.length} bókunum eru eldri en ${PHOTO_MONTHS} mánaða.</p><div class="actions"><button type="button" class="btn danger" data-act="cleanphotos">Eyða ${n} myndum</button></div>`:`<p class="muted" style="margin:0">Engar myndir eldri en ${PHOTO_MONTHS} mánaða.</p>`}
+  catch(e){toast(failMsg(e))}
+  btn.disabled=false;btn.textContent="Athuga aftur";
+}
+function cleanPhotos(){
+  const list=scanPhotos.list||[],n=sum(list,b=>(b.photos||[]).length);if(!n)return;
+  ask("Eyða gömlum myndum?",`${n} myndum eldri en ${PHOTO_MONTHS} mánaða verður eytt endanlega. Bókanirnar sjálfar og ástandslýsingar haldast. Myndir eru ekki í afritinu, svo ekki er hægt að fá þær aftur.`,"Eyða myndum",async()=>{
+    for(const b of list){await dropPhotos(b.photos);await S.db.doc("bookings/"+b.id).update({photos:[]})}
+    scanPhotos.list=[];toast(n+" myndum eytt");
+  });
+}
+/* ---------- backup reminder ---------- */
+const backupAge=()=>S.meta.lastBackup?Math.floor((Date.now()-S.meta.lastBackup)/864e5):999;
+async function setMeta(patch){S.meta={...S.meta,...patch};await S.db.doc("settings/meta").set(S.meta)}
+function openName(then){
+  $("dlg").className="";$("frm").dataset.kind="name";openName.then=then||null;
+  $("frm").innerHTML=`<h2>Hver ert þú?</h2><p class="hint" style="margin:0">Nafnið vistast á þessu tæki og birtist á verkspjaldinu þegar þú breytir stöðu bíls, svo allir sjá hver tók hvaða bíl.</p>${staffList().length?`<div class="namechips">${staffList().map(n=>`<button type="button" data-act="pickname" data-n="${esc(n)}" class="${n===who()?"on":""}">${esc(n)}</button>`).join("")}</div>`:""}<div class="f"><label for="n_name">${staffList().length?"Eða skrifaðu nafn":"Nafn"}</label><input id="n_name" value="${esc(who())}" autocomplete="given-name"></div><div class="actions"><span class="sp"></span><button type="button" class="btn" data-act="close">Seinna</button><button type="submit" class="btn primary" id="savebtn">Vista</button></div>`;
+  openDlg();setTimeout(()=>$("n_name").focus(),0);
+}
+function renderWho(){const w=$("whobtn");if(!w)return;w.hidden=!S.askName;w.textContent=who()||"Hver ert þú?"}
+async function exportJson(){
+  const clean=l=>l.map(x=>({...x}));
+  /* the website only keeps 12 months in memory, so the backup fetches everything from the server */
+  let src;try{src=fetchEverything?await fetchEverything():{bookings:S.bookings,customers:S.customers,plans:S.plans,expenses:S.expenses,supplies:S.supplies,meta:S.meta}}catch(e){toast("Ekki tókst að sækja öll gögn í afritið. Athugaðu nettenginguna.");return}
+  const data={app:"elite-detail",version:2,exportedAt:new Date().toISOString(),bookings:clean(src.bookings),customers:clean(src.customers),plans:clean(src.plans),expenses:clean(src.expenses),supplies:clean(src.supplies),meta:{...(src.meta||{})},settings:S.settings};
+  if(await saveFile("bespoke-detail-afrit-"+TODAY+".json",JSON.stringify(data,null,1))){try{await setMeta({lastBackup:Date.now()})}catch(e){}render()}
+}
+
+/* ---------- CSV ---------- */
+async function exportCsv(){
+  const {l,e}=monthData(S.month);
+  const q=s=>{s=String(s??"");return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};
+  saveFile("bespoke-detail-"+S.month+".csv",csvOf(l,e));
+}
+function csvOf(l,e){
+  const q=s=>{s=String(s??"");return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};
+  const r0=n=>Math.round(n);
+  const rows=[["Tegund","Dagsetning","Viðskiptavinur / birgir","Bílnúmer","Þjónusta","Lýsing","Upphæð með VSK","VSK %","VSK","Upphæð án VSK","Rukkað"]];
+  [...l].sort((a,b)=>a.date.localeCompare(b.date)).forEach(b=>{const g=+b.price||0,v=vatOf(g,VAT);rows.push(["Tekjur",b.date,b.customerName,b.plate,svcName(b.service),(b.extras||[]).map(x=>x.name).join(", "),g,VAT,r0(v),r0(g-v),b.paid?"Já":"Nei"])});
+  [...e].sort((a,b)=>(a.date||"").localeCompare(b.date||"")).forEach(x=>{const g=+x.amount||0,rt=x.vat==null?VAT:+x.vat,v=vatOf(g,rt);rows.push(["Kostnaður",x.date,x.supplier,"","",x.description,-g,rt,-r0(v),-r0(g-v),""])});
+  return"\ufeff"+rows.map(r=>r.map(q).join(";")).join("\r\n");
+}
+function exportVatCsv(){const months=vatMonths(),v=vatData(months);saveFile("bespoke-detail-vsk-"+months.join("_")+".csv",csvOf(v.sales,v.exps))}
+/* ---------- dates ---------- */
+const dmy=s=>{const[y,m,d]=s.split("-");return d+"."+m+"."+y};
+
+/* ---------- events ---------- */
+async function upd(id,data,msg){try{await S.db.doc("bookings/"+id).update(data);if(msg)toast(msg)}catch(e){toast(failMsg(e))}}
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("[data-act],[data-tab]");if(!t)return;
+  if(t.dataset.tab){dirtyForm=null;S.tab=t.dataset.tab;try{history.replaceState(null,"","#"+S.tab)}catch(_){}render();return}
+  const a=t.dataset.act,id=t.dataset.id;
+  if(a==="new")openBooking(null,S.tab==="idag"?S.day:TODAY);
+  else if(a==="addon")openBooking(null,t.dataset.date);
+  else if(a==="edit")openBooking(S.bookings.find(b=>b.id===id));
+  else if(a==="prevw"){S.week=addDays(S.week,-7);if(ensureFrom)await ensureFrom(S.week);render()}
+  else if(a==="nextw"){S.week=addDays(S.week,7);render()}
+  else if(a==="thisw"){S.week=mondayOf(TODAY);render()}
+  else if(a==="prevd"){S.day=addDays(S.day,-1);if(ensureFrom)await ensureFrom(S.day);render()}
+  else if(a==="nextd"){S.day=addDays(S.day,1);render()}
+  else if(a==="today"){S.day=TODAY;render()}
+  else if(a==="prevm"){S.month=addMonths(S.month,-1);if(ensureFrom)await ensureFrom(addMonths(S.month,-5)+"-01");render()}
+  else if(a==="nextm"){S.month=addMonths(S.month,1);render()}
+  else if(a==="opencust")openCustomer(custById(id));
+  else if(a==="newcust")openCustomer(null);
+  else if(a==="bookfor"){const c=custById(id),car=c?.cars?.[0];$("dlg").close();openBooking(null,TODAY,{customerId:id,plate:car?.plate||"",model:car?.model||"",size:car?.size||"small",address:c?.address||""})}
+  else if(a==="tojob"){const b=edit;$("dlg").close();S.tab="idag";S.day=b.date;render();setTimeout(()=>{const el=$("job-"+b.id);if(el)el.scrollIntoView({block:"start"})},50)}
+  else if(a==="close")$("dlg").close();
+  else if(a==="addcar"){$("carrows").insertAdjacentHTML("beforeend",carRow({}));const rows=$("carrows").querySelectorAll(".cr-plate");rows[rows.length-1].focus()}
+  else if(a==="rmcar"){t.closest(".carrow").remove()}
+  else if(a==="pickcar"){const c=custById($("f_cust").value),car=(c?.cars||[]).find(x=>x.plate===t.dataset.plate);if(car){$("f_plate").value=car.plate;$("f_model").value=car.model||"";$("f_size").value=car.size||"small";syncBookingForm()}}
+  else if(a==="askdel"||a==="askdelph"||a==="askdelcust"){t.hidden=true;t.nextElementSibling.hidden=false}
+  else if(a==="dodel"){t.disabled=true;try{const b=edit;await toTrash(`Bókun: ${b.customerName||""}${b.plate?" · "+b.plate:""} · ${nice(b.date)}`,{items:[{collection:"bookings",id:b.id,data:stripId(b)}],photos:b.photos});await S.db.doc("bookings/"+b.id).delete();toast("Bókun sett í ruslafötu");$("dlg").close()}catch(err){showErr(failMsg(err));t.disabled=false}}
+  else if(a==="dodelcust"){t.disabled=true;try{await delCustomer(editCust);toast("Viðskiptavinur settur í ruslafötu");$("dlg").close()}catch(err){showErr(failMsg(err));t.disabled=false}}
+  else if(a==="setname")openName();
+  else if(a==="signoutall"&&signOutAll)ask("Skrá út öll tæki?","Allir símar og tölvur sem eru innskráð verða skráð út, þetta tæki líka. Gerðu þetta ef sími týnist eða starfsmaður hættir, og breyttu svo lykilorðinu í Supabase.","Skrá út öll tæki",signOutAll);
+  else if(a==="photo")openPhoto(id,t.dataset.pid);
+  else if(a==="dodelph"){const {bid,pid}=photoRef,b=S.bookings.find(x=>x.id===bid);
+    const ph=(b?.photos||[]).find(p=>p.id===pid);
+    try{await S.db.doc("bookings/"+bid).update({photos:(b?.photos||[]).filter(p=>p.id!==pid)});await dropPhotos(ph?[ph]:[{id:pid}]);toast("Mynd eytt");$("dlg").close()}catch(err){showErr(failMsg(err))}}
+  else if(a==="setstatus"){const bk=S.bookings.find(x=>x.id===id),s2=t.dataset.s;
+    if(bk&&s2==="vinnsla"&&!(bk.workers||[]).length){openWorkers(id,true);return}
+    const go=()=>{const u={status:s2,statusBy:who(),statusAt:Date.now()};
+      if(s2==="vinnsla"&&bk&&!bk.startedAt)u.startedAt=Date.now();
+      if(s2==="skilad"&&bk&&bk.keyStatus==="okkur")u.keyStatus="skilad";
+      if((s2==="klart"||s2==="skilad")&&bk&&!bk.doneBy)u.doneBy=who()||workersOf(bk)[0]||"";
+      /* the clock stops at Klárt; Skilað only fills it in if Klárt was skipped. A time edited or deleted by hand is left alone */
+      if(bk&&bk.startedAt&&!bk.workMinManual&&!bk.workMinDeleted&&(s2==="klart"||(s2==="skilad"&&bk.workMin==null)))u.workMin=Math.max(1,Math.round((Date.now()-bk.startedAt)/60000));
+      upd(id,u)};
+    if(!who()&&S.askName)openName(go);else go()}
+  else if(a==="workers")openWorkers(id,false);
+  else if(a==="edittime")openTime(id);
+  else if(a==="deltime"){const b=S.bookings.find(x=>x.id===id);if(b)ask("Eyða tíma?",`Tíminn á ${b.plate||b.customerName} (${fmtMin(b.workMin)}) verður fjarlægður og telst ekki með í meðaltölum. Þú getur skráð hann aftur með „Skrá tíma“.`,"Eyða tíma",async()=>{await S.db.doc("bookings/"+id).update({workMin:null,workMinDeleted:true,workMinManual:false});toast("Tíma eytt")})}
+  else if(a==="pickname"){$("n_name").value=t.dataset.n;document.querySelectorAll(".namechips button").forEach(x=>x.classList.toggle("on",x===t))}
+  else if(a==="bookplan")bookFromPlan(id);
+  else if(a==="callinfo")openCallInfo(id);
+  else if(a==="newsupply")openSupply(null);
+  else if(a==="editsupply")openSupply(S.supplies.find(x=>x.id===id));
+  else if(a==="bought"){const x=S.supplies.find(s=>s.id===id);if(x)openBought(x)}
+  else if(a==="opened")markOpened(id);
+  else if(a==="keystat"){const bk=S.bookings.find(x=>x.id===id);if(bk)upd(id,{keyStatus:bk.keyStatus===t.dataset.s?"":t.dataset.s},"Lyklar: "+(bk.keyStatus===t.dataset.s?"ekki skráð":KEYST[t.dataset.s]))}
+  else if(a==="supcat"){t.parentNode.querySelectorAll("button").forEach(x=>{x.classList.toggle("on",x===t);x.setAttribute("aria-checked",x===t)})}
+  else if(a==="askdelsup"){t.hidden=true;t.nextElementSibling.hidden=false}
+  else if(a==="dodelsup"){t.disabled=true;try{const x=editSupply;await toTrash("Efni: "+x.name,{items:[{collection:"supplies",id:x.id,data:stripId(x)}]});await S.db.doc("supplies/"+x.id).delete();toast("Efni sett í ruslafötu");$("dlg").close()}catch(err){showErr(failMsg(err));t.disabled=false}}
+  else if(a==="snooze")openSnooze(id);
+  else if(a==="dosnooze"){const n=+t.dataset.n,until=addDays(TODAY,n);try{await S.db.doc("plans/"+id).update({snoozeUntil:until});toast("Minni á aftur "+niceLong(until));$("dlg").close()}catch(err){showErr(failMsg(err))}}
+  else if(a==="close2")$("dlg2").close();
+  else if(a==="repno"){askRepeat.pending=false;$("f_repeat").value=repeatOk;$("dlg2").close();syncBookingForm()}
+  else if(a==="repyes"){askRepeat.pending=false;repeatOk=t.dataset.v;$("f_repeat").value=repeatOk;priceDirty=false;priceFromPlan=false;$("dlg2").close();syncBookingForm()}
+  else if(a==="stopplan")stopPlan(id);
+  else if(a==="delplan")delPlan(id);
+  else if(a==="exportjson")exportJson();
+  else if(a==="logout"&&logout)logout();
+  else if(a==="markpaid")upd(id,{paid:true},"Merkt rukkað");
+  else if(a==="editexp")openExpense(S.expenses.find(x=>x.id===id));
+  else if(a==="askdelexp"){t.hidden=true;t.nextElementSibling.hidden=false}
+  else if(a==="dodelexp"){t.disabled=true;try{const x=editExp;await toTrash(`Kostnaður: ${x.description||x.supplier||""} · ${kr(x.amount)}`,{items:[{collection:"expenses",id:x.id,data:stripId(x)}]});await S.db.doc("expenses/"+x.id).delete();toast("Kostnaður settur í ruslafötu");$("dlg").close()}catch(err){showErr(failMsg(err));t.disabled=false}}
+  else if(a==="restore")restoreTrash(id);
+  else if(a==="purgeone"){const x=S.trash.find(z=>z.id===id);if(x)ask("Eyða endanlega?",`„${x.label}“ verður eytt fyrir fullt og allt, myndir líka. Ekki er hægt að endurheimta það.`,"Eyða endanlega",async()=>{await purgeTrash(x);toast("Eytt endanlega")})}
+  else if(a==="prevvat"||a==="nextvat"){const cur=S.vatFrom||vatPeriodOf(ym(TODAY));S.vatFrom=addMonths(cur,a==="prevvat"?-2:2);if(ensureFrom)await ensureFrom(S.vatFrom+"-01");render()}
+  else if(a==="vatcsv")exportVatCsv();
+  else if(a==="vatmode"){S.vatMode=t.dataset.m;render()}
+  else if(a==="billcsv")billCsv();
+  else if(a==="billcust"){const g=billGroups().find(x=>x.key===id);if(g)ask("Merkja rukkað?",`${g.name}: ${g.items.length} ${g.items.length===1?"bíll":"bílar"}, samtals ${kr(g.total)}, merkt sem rukkað.`,"Merkja rukkað",async()=>{for(const b of g.items)await S.db.doc("bookings/"+b.id).update({paid:true,billedAt:Date.now(),billedBy:who()});toast(g.name+" merkt rukkað")})}
+  else if(a==="help"){$("help").hidden=false;$("helpbg").hidden=false;$("help").querySelector(".dlgx").focus()}
+  else if(a==="closehelp"){$("help").hidden=true;$("helpbg").hidden=true}
+  else if(a==="oldhist")showOldHistory(id,t);
+  else if(a==="oldsearch")runOldSearch(t);
+  else if(a==="scanphotos")scanPhotos(t);
+  else if(a==="cleanphotos")cleanPhotos();
+  else if(a==="csv")exportCsv();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("help").hidden){$("help").hidden=true;$("helpbg").hidden=true}});
+document.addEventListener("input",e=>{
+  if(e.target.id==="q"){S.q=e.target.value;render.focusQ=true;render();render.focusQ=false}
+  if(e.target.id==="f_price"){priceDirty=true;priceFromPlan=false}
+  const df=e.target.closest&&e.target.closest("#setform,#expform");if(df&&e.target.id!=="st_staff")dirtyForm=df.id;
+  if(e.target.id==="b_qty"||e.target.id==="b_price")syncBought();
+});
+document.addEventListener("change",e=>{
+  const el=e.target,id=el.id;
+  if(id==="f_repeat"&&formPlan&&el.value!==repeatOk){askRepeat(el.value);return}
+  if(id==="f_pickup")pickupTouched=true;
+  if(id==="f_service"&&!pickupTouched)$("f_pickup").checked=SERVICES[el.value].pickup;
+  if((id==="f_service"||id==="f_size"||el.dataset.extra!==undefined)&&priceFromPlan){priceDirty=false;priceFromPlan=false}
+  const df=el.closest&&el.closest("#setform,#expform");if(df&&el.type!=="file"&&id!=="st_staff")dirtyForm=df.id;
+  if(id==="st_staff")saveStaff(el.value.split("\n"));
+  if(["f_cust","f_service","f_size","f_repeat","f_pickup","f_date"].includes(id)||el.dataset.extra!==undefined)syncBookingForm();
+  if(id==="f_plate")fillCar();
+  if(el.dataset.chk)upd(el.dataset.chk,{checklist:{[el.dataset.item]:el.checked}});
+  if(el.dataset.paid)upd(el.dataset.paid,{paid:el.checked},el.checked?"Merkt rukkað":"Merkt órukkað");
+  if(el.dataset.bf)upd(el.dataset.bid,{[el.dataset.bf]:el.value.trim()},"Vistað");
+  if(el.dataset.up)uploadPhotos(el);
+  if(id==="importfile"&&el.files[0]&&importJson){importJson(el.files[0]);el.value=""}
+});
+$("frm").addEventListener("submit",async e=>{
+  e.preventDefault();const k=$("frm").dataset.kind;
+  if(k==="booking")saveBooking();
+  else if(k==="customer")saveCustomer();
+  else if(k==="supply")saveSupply();
+  else if(k==="bought")saveBought();
+  else if(k==="expense")saveExpense();
+  else if(k==="workers")saveWorkers();
+  else if(k==="worktime")saveTime();
+  else if(k==="name"){const n=$("n_name").value.trim();try{n?localStorage.setItem("ed_name",n):localStorage.removeItem("ed_name")}catch(err){}$("dlg").close();renderWho();const f=openName.then;openName.then=null;if(f&&n)f()}
+  else if(k==="confirm"&&confirmFn){$("savebtn").disabled=true;try{await confirmFn();$("dlg").close()}catch(err){showErr(failMsg(err));$("savebtn").disabled=false}}
+});
+document.addEventListener("submit",async e=>{
+  if(e.target.id==="gform"){e.preventDefault();openSearch($("gq").value);return}
+  if(e.target.id==="expform"){e.preventDefault();
+    const amount=+$("e_amt").value,date=$("e_date").value;
+    if(!amount||!date){toast("Skráðu dagsetningu og upphæð.");return}
+    try{await S.db.collection("expenses").add({date,supplier:$("e_sup").value.trim(),description:$("e_desc").value.trim(),amount,vat:+$("e_vat").value,createdAt:Date.now()});$("e_amt").value="";$("e_desc").value="";$("e_amt").blur();dirtyForm=null;toast("Kostnaður skráður");render()}catch(err){toast(failMsg(err))}
+    return}
+  if(e.target.id!=="setform")return;e.preventDefault();
+  if(!S.db){toast("Gagnageymslan er ekki tengd.");return}
+  const num=id=>+$(id).value||0;
+  const prices={},durations={};Object.keys(SERVICES).forEach(k=>{prices[k]={small:num("p_"+k+"_small"),big:num("p_"+k+"_big")};durations[k]={small:num("t_"+k+"_small"),big:num("t_"+k+"_big")}});
+  const discounts={};["4","6","8"].forEach(w=>discounts[w]=Math.max(0,Math.min(50,num("d_"+w))));
+  const extras=$("s_extras").value.split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const m=l.match(/^(.*?)[,;]\s*([\d.\s]+)\s*(kr\.?)?$/i);return m?{name:m[1].trim(),price:+m[2].replace(/[.\s]/g,"")||0}:{name:l.replace(/[,;\s]+$/,""),price:0}}).filter(x=>x.name);
+  const checklists={};Object.keys(SERVICES).forEach(k=>checklists[k]=$("cl_"+k).value.split("\n").map(l=>l.trim()).filter(Boolean));
+  const company=S.settings.company||{},staff=[...new Set($("st_staff").value.split("\n").map(x=>x.trim()).filter(Boolean))];
+  const oldPrices=S.settings.prices;
+  try{document.activeElement&&document.activeElement.blur();await S.db.doc("settings/main").set({prices,durations,dayHours:Math.max(1,num("dayhours")||8),discounts,extras,checklists,company,staff,messages:S.settings.messages||{},updatedAt:Date.now()});dirtyForm=null;toast("Stillingar vistaðar");render()}catch(err){toast(failMsg(err));return}
+  /* price list changed: offer to move existing áskriftir to the new prices */
+  const changed=S.plans.filter(p=>p.active&&((oldPrices[p.service]||{})[p.size]||0)!==((prices[p.service]||{})[p.size]||0)).map(p=>{const base=(prices[p.service]||{})[p.size]||0;return{p,np:round100(base*(1-(+p.discount||0)/100))+sum(p.extras||[],x=>x.price)}}).filter(x=>x.np!==(+x.p.price||0));
+  if(changed.length)ask("Uppfæra verð á áskriftum?",`${changed.length} ${changed.length===1?"áskrift er":"áskriftir eru"} á gamla verðinu (${changed.slice(0,4).map(x=>x.p.customerName+": "+kr(x.p.price)+" → "+kr(x.np)).join(", ")}${changed.length>4?" …":""}). Ef þú velur nei halda þær gamla verðinu.`,"Já, uppfæra",async()=>{for(const x of changed)await S.db.doc("plans/"+x.p.id).update({price:x.np});toast("Verð uppfært á "+changed.length+" áskriftum")});
+});
+
+/* ---------- data: Supabase (standalone website) ---------- */
+/* the Supabase address and key live in config.js, so a new index.html never needs them re-pasted */
+const CONFIG=Object.assign({url:"PASTE_SUPABASE_PROJECT_URL",key:"PASTE_SUPABASE_ANON_KEY"},window.ELITE_CONFIG||{});
+const BUCKET="photos",COLS=["bookings","customers","plans","expenses","supplies","trash","settings"];
+const configured=!/^PASTE_/.test(CONFIG.url)&&!/^PASTE_/.test(CONFIG.key);
+const sb=configured&&window.supabase?window.supabase.createClient(CONFIG.url,CONFIG.key):null;
+let UID=null,booted=false;
+
+/* local cache + listeners, shaped like the store API the dashboard already uses */
+const cache={},listeners={},docListeners={};
+COLS.forEach(c=>cache[c]=new Map());
+const docSnap=(col,id)=>{const d=cache[col]?.get(id);return{id,exists:!!d,data:()=>d}};
+const colSnap=col=>({docs:[...(cache[col]||new Map())].map(([id,d])=>({id,exists:true,data:()=>d}))});
+function emitCol(col){(listeners[col]||[]).forEach(f=>f(colSnap(col)));Object.keys(docListeners).filter(k=>k.startsWith(col+"/")).forEach(k=>docListeners[k].forEach(f=>f(docSnap(col,k.slice(col.length+1)))))}
+function local(col,id,data){(cache[col]||(cache[col]=new Map()));if(data===null)cache[col].delete(id);else cache[col].set(id,data);emitCol(col)}
+const newId=()=>(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()).replace(/[^a-z0-9]/gi,"").slice(0,20);
+function check(r){if(r&&r.error){const e=new Error(r.error.message||"error");const m=(r.error.message||"")+" "+(r.error.code||"");e.code=/quota|limit|exceed|too large/i.test(m)?"quota_exceeded":/42501|row-level|permission|jwt/i.test(m)?"invalid_argument":"unavailable";throw e}return r}
+const isObj=v=>v&&typeof v==="object"&&!Array.isArray(v);
+function deepMerge(a,b){const o={...a};Object.keys(b).forEach(k=>{o[k]=isObj(b[k])&&isObj(a[k])?deepMerge(a[k],b[k]):b[k]});return o}
+function docRef(col,id){return{id,path:col+"/"+id,
+  async get(){return docSnap(col,id)},
+  async set(data){check(await sb.from("docs").upsert({owner:UID,collection:col,id,data,updated_at:new Date().toISOString()}));local(col,id,data)},
+  async update(data){
+    /* merge into the server's current copy, not this phone's, so two people ticking different items don't overwrite each other */
+    const r=check(await sb.from("docs").select("data").eq("collection",col).eq("id",id).maybeSingle());
+    const cur=r.data&&r.data.data;
+    if(!cur){local(col,id,null);const e=new Error("Færslan fannst ekki");e.code="not_found";throw e}
+    const next=deepMerge(cur,data);check(await sb.from("docs").update({data:next,updated_at:new Date().toISOString()}).eq("collection",col).eq("id",id));local(col,id,next)},
+  async delete(){check(await sb.from("docs").delete().eq("collection",col).eq("id",id));local(col,id,null)},
+  onSnapshot(fn){const k=col+"/"+id;(docListeners[k]||(docListeners[k]=[])).push(fn);fn(docSnap(col,id));return()=>{}}}}
+const db={
+  collection(col){return{path:col,doc:id=>docRef(col,id||newId()),async add(data){const r=docRef(col,newId());await r.set(data);return r},
+    onSnapshot(fn){(listeners[col]||(listeners[col]=[])).push(fn);fn(colSnap(col));return()=>{}}}},
+  doc(path){const[c,i]=path.split("/");return docRef(c,i)}
+};
+/* bookings: only the last 12 months and everything ahead are loaded; older ones are fetched when you go back to them */
+let loadedFrom=addDays(TODAY,-366);
+async function pageAll(build){
+  const out=[];
+  for(let from=0;;from+=1000){
+    const r=check(await build().order("collection").order("id").range(from,from+999));
+    out.push(...(r.data||[]));
+    if(!r.data||r.data.length<1000)break;
+  }
+  return out;
+}
+const sel=()=>sb.from("docs").select("collection,id,data");
+let lastSync=0,lastFull=0;
+async function loadAll(){
+  const started=Date.now();
+  const rows=[...await pageAll(()=>sel().neq("collection","bookings")),...await pageAll(()=>sel().eq("collection","bookings").gte("data->>date",loadedFrom))];
+  const fresh={};COLS.forEach(c=>fresh[c]=new Map());
+  rows.forEach(row=>{(fresh[row.collection]||(fresh[row.collection]=new Map())).set(row.id,row.data)});
+  Object.keys(fresh).forEach(c=>cache[c]=fresh[c]);
+  Object.keys(cache).forEach(emitCol);
+  lastSync=lastFull=started;
+}
+/* when a phone wakes up, fetch only what changed since last time (the database stamps every change);
+   a full reload every 6 hours also catches anything deleted while the phone was asleep */
+async function syncChanges(){
+  if(!lastFull||Date.now()-lastFull>6*3600e3)return loadAll();
+  const started=Date.now(),since=new Date(lastSync-5*60e3).toISOString();
+  const rows=await pageAll(()=>sel().gte("updated_at",since));
+  const touched=new Set();
+  rows.forEach(r=>{(cache[r.collection]||(cache[r.collection]=new Map())).set(r.id,r.data);touched.add(r.collection)});
+  touched.forEach(emitCol);lastSync=started;
+}
+fetchEverything=async()=>{
+  const rows=await pageAll(()=>sel());
+  const out={bookings:[],customers:[],plans:[],expenses:[],supplies:[],meta:{}};
+  rows.forEach(r=>{if(r.collection==="settings"){if(r.id==="meta")out.meta=r.data;return}if(out[r.collection])out[r.collection].push({id:r.id,...r.data})});
+  return out;
+};
+ensureFrom=async d=>{
+  if(!d||d>=loadedFrom)return;
+  const from=addDays(d,-31);banner.hidden=false;banner.textContent="Sæki eldri gögn…";
+  try{const rows=await pageAll(()=>sel().eq("collection","bookings").gte("data->>date",from).lt("data->>date",loadedFrom));
+    rows.forEach(r=>cache.bookings.set(r.id,r.data));loadedFrom=from;emitCol("bookings");banner.hidden=true}
+  catch(e){banner.textContent="Ekki tókst að sækja eldri gögn. Athugaðu nettenginguna."}
+};
+const asList=rows=>rows.map(r=>({id:r.id,...r.data}));
+customerHistory=async cid=>asList(await pageAll(()=>sel().eq("collection","bookings").eq("data->>customerId",cid).lt("data->>date",loadedFrom)));
+searchOld=async q=>{const np=normPlate(q);return asList(await pageAll(()=>sel().eq("collection","bookings").lt("data->>date",loadedFrom).ilike("data->>plate","%"+np+"%")))};
+fetchOldPhotos=async cutoff=>asList(await pageAll(()=>sel().eq("collection","bookings").lt("data->>date",cutoff))).filter(b=>(b.photos||[]).length);
+
+/* photos: private bucket, shown through short-lived signed links */
+const urlCache={},urlPending=new Set();let urlTimer=null;
+const BLANK="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+const objPath=id=>UID+"/"+id+".jpg";
+photoSrc=id=>{const c=urlCache[id];if(c&&c.exp>Date.now())return c.url;if(UID){urlPending.add(id);clearTimeout(urlTimer);urlTimer=setTimeout(fetchUrls,20)}return BLANK};
+async function fetchUrls(){
+  const ids=[...urlPending];urlPending.clear();if(!ids.length)return;
+  let got=[];try{const r=await sb.storage.from(BUCKET).createSignedUrls(ids.map(objPath),3600);got=r.data||[]}catch(e){}
+  ids.forEach((id,i)=>{const u=got[i]&&got[i].signedUrl;urlCache[id]=u?{url:u,exp:Date.now()+3300e3}:{url:BLANK,exp:Date.now()+60e3}});
+  dataRender();
+  const big=document.querySelector("dialog[open] .bigimg");if(big&&photoRef)big.src=photoSrc(photoRef.pid);
+}
+const assets={
+  async upload(blob,opts){const id=newId();check(await sb.storage.from(BUCKET).upload(objPath(id),blob,{contentType:(opts&&opts.type)||blob.type||"image/jpeg",upsert:false}));return{id}},
+  async delete(id){check(await sb.storage.from(BUCKET).remove([objPath(id)]));return{deleted:true}}
+};
+
+/* files: plain browser downloads */
+saveFile=async(name,data)=>{
+  const type=name.endsWith(".csv")?"text/csv;charset=utf-8":name.endsWith(".pdf")?"application/pdf":"application/json";
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+  return true;
+};
+
+/* new version notice: compares this page's version with the one on the server */
+const APP_VERSION="v-20261120-151658";
+function showUpdate(){
+  if($("updbar"))return;
+  const d=document.createElement("div");d.id="updbar";d.setAttribute("role","status");
+  d.innerHTML='<span>Ný útgáfa er komin</span><button type="button" id="updbtn">Uppfæra</button>';
+  document.body.appendChild(d);$("updbtn").onclick=()=>location.reload();
+}
+async function checkVersion(){
+  if(Date.now()-(checkVersion.last||0)<15*60e3)return;checkVersion.last=Date.now();
+  try{const r=await fetch(location.pathname.replace(/[^/]*$/,"")+"index.html?check="+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;const m=(await r.text()).match(/APP_VERSION="(v-[^"]+)"/);
+    if(m&&m[1]!==APP_VERSION)showUpdate()}catch(e){}
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checkVersion()});
+setInterval(checkVersion,30*60e3);
+setTimeout(checkVersion,5000);
+
+/* import a backup exported from the Claude version (or this one) */
+importJson=async file=>{
+  let j;try{j=JSON.parse(await file.text())}catch(e){toast("Þetta er ekki gild afritsskrá.");return}
+  if(!j||j.app!=="elite-detail"){toast("Þetta er ekki afrit úr Bespoke Detail.");return}
+  const rows=[],now=new Date().toISOString();
+  ["bookings","customers","plans","expenses","supplies"].forEach(c=>(j[c]||[]).forEach(d=>{if(!d||!d.id)return;const{id,...r}=d;if(c==="bookings")delete r.photos;rows.push({owner:UID,collection:c,id:String(id),data:r,updated_at:now})}));
+  if(j.settings)rows.push({owner:UID,collection:"settings",id:"main",data:j.settings,updated_at:now});
+  if(j.meta&&Object.keys(j.meta).length)rows.push({owner:UID,collection:"settings",id:"meta",data:j.meta,updated_at:now});
+  ask("Flytja inn afrit?",`${rows.length} færslur verða fluttar inn. Færslur sem eru þegar til með sama auðkenni verða yfirskrifaðar. Myndir fylgja ekki með.`,"Flytja inn",async()=>{
+    for(let i=0;i<rows.length;i+=500)check(await sb.from("docs").upsert(rows.slice(i,i+500)));
+    await loadAll();toast("Gögn flutt inn")});
+};
+
+logout=async()=>{try{await sb.auth.signOut()}catch(e){}location.reload()};
+signOutAll=async()=>{const r=await sb.auth.signOut({scope:"global"});if(r&&r.error)throw Object.assign(new Error(r.error.message),{code:"unavailable"});location.reload()};
+window.addEventListener("offline",()=>{banner.hidden=false;banner.textContent="Ekkert netsamband. Breytingar vistast ekki fyrr en tengingin kemur aftur."});
+window.addEventListener("online",()=>{banner.hidden=true;if(booted)syncChanges().catch(()=>{})});
+
+/* ---------- login ---------- */
+const banner=$("banner");
+function showLogin(msg){
+  $("app").hidden=true;$("login").hidden=false;
+  if(msg){$("lerr").textContent=msg;$("lerr").hidden=false}
+  if(!configured){$("lerr").textContent="Vefsíðan er ekki tengd ennþá. Settu Supabase-slóðina og lykilinn í skrána config.js (sjá leiðbeiningar).";$("lerr").hidden=false;$("lbtn").disabled=true}
+  else if(!window.supabase){$("lerr").textContent="Ekki tókst að hlaða innskráningarkerfinu. Athugaðu nettenginguna og endurhlaðið síðunni.";$("lerr").hidden=false;$("lbtn").disabled=true}
+  else setTimeout(()=>$("l_email").focus(),0);
+}
+$("loginform").addEventListener("submit",async e=>{
+  e.preventDefault();const em=$("l_email").value.trim(),pw=$("l_pw").value;
+  if(!em||!pw){$("lerr").textContent="Skráðu netfang og lykilorð.";$("lerr").hidden=false;return}
+  $("lbtn").disabled=true;$("lerr").hidden=true;
+  try{const r=await sb.auth.signInWithPassword({email:em,password:pw});
+    if(r.error||!r.data||!r.data.session){$("lerr").textContent=/fetch|network/i.test(r.error?.message||"")?"Engin tenging. Athugaðu netið og reyndu aftur.":"Rangt netfang eða lykilorð.";$("lerr").hidden=false;$("lbtn").disabled=false;return}
+    $("l_pw").value="";boot(r.data.session);
+  }catch(err){$("lerr").textContent="Engin tenging. Athugaðu netið og reyndu aftur.";$("lerr").hidden=false;$("lbtn").disabled=false}
+});
+
+async function boot(session){
+  if(booted)return;booted=true;UID=session.user.id;
+  $("login").hidden=true;$("app").hidden=false;$("logout").hidden=false;
+  banner.hidden=false;banner.textContent="Sæki gögn…";
+  try{await loadAll()}catch(e){banner.textContent="Ekki tókst að sækja gögn. Athugaðu nettenginguna og endurhlaðið síðunni.";booted=false;return}
+  banner.hidden=true;
+  S.db=db;S.assets=assets;S.downloads=true;S.canImport=true;S.askName=true;S.windowed=true;
+  let got=0;const cols=[["bookings","bookings"],["customers","customers"],["plans","plans"],["expenses","expenses"],["supplies","supplies"],["trash","trash"]];
+  db.doc("settings/meta").onSnapshot(s=>{S.meta=s.exists?{...s.data()}:{};dataRender()});
+  cols.forEach(([col,key])=>{let first=true;db.collection(col).onSnapshot(snap=>{S[key]=snap.docs.map(d=>({id:d.id,...d.data()}));if(first){first=false;if(++got>=cols.length)S.ready=true}dataRender()})});
+  db.doc("settings/main").onSnapshot(s=>{const d=s.exists?s.data():null;S.settings=d?{...DEFAULTS,...d,prices:{...DEFAULTS.prices,...d.prices},durations:{...DEFAULTS.durations,...(d.durations||{})},discounts:{...DEFAULTS.discounts,...d.discounts},extras:d.extras||DEFAULTS.extras,messages:{...DEFAULTS.messages,...(d.messages||{})},checklists:{...DEFAULTS.checklists,...(d.checklists||{})}}:DEFAULTS;dataRender()});
+  /* live updates from your other devices */
+  try{sb.channel("docs-"+UID).on("postgres_changes",{event:"*",schema:"public",table:"docs"},p=>{
+    if(p.eventType==="DELETE"){if(p.old&&p.old.collection)local(p.old.collection,p.old.id,null)}
+    else if(p.new&&p.new.collection)local(p.new.collection,p.new.id,p.new.data)}).subscribe()}catch(e){}
+  /* catch up when the phone wakes the page again */
+  let last=Date.now();
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&Date.now()-last>30e3){last=Date.now();syncChanges().catch(()=>{})}});
+  render();
+  if(!who())openName();
+}
+
+render();
+if(!sb)showLogin();
+else{
+  sb.auth.getSession().then(({data})=>{if(data&&data.session)boot(data.session);else showLogin()}).catch(()=>showLogin());
+  sb.auth.onAuthStateChange((ev,session)=>{if(ev==="SIGNED_OUT"&&booted)location.reload()});
+}
+
+})();
+</script>
+</body>
+</html>
