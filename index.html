@@ -1382,10 +1382,21 @@ document.addEventListener("submit",async e=>{
 /* ---------- data: Supabase (standalone website) ---------- */
 /* the Supabase address and key live in config.js, so a new index.html never needs them re-pasted */
 const CONFIG=Object.assign({url:"PASTE_SUPABASE_PROJECT_URL",key:"PASTE_SUPABASE_ANON_KEY"},window.ELITE_CONFIG||{});
+/* tolerate a URL pasted with /rest/v1/ or a trailing slash */
+CONFIG.url=String(CONFIG.url).trim().replace(/\/(rest|auth|storage)\/v1\/?$/,"").replace(/\/+$/,"");CONFIG.key=String(CONFIG.key).trim();
 const BUCKET="photos",COLS=["bookings","customers","plans","expenses","supplies","trash","settings"];
 const configured=!/^PASTE_/.test(CONFIG.url)&&!/^PASTE_/.test(CONFIG.key);
 const sb=configured&&window.supabase?window.supabase.createClient(CONFIG.url,CONFIG.key):null;
 let UID=null,booted=false;
+/* say what actually went wrong, so setup mistakes can be found */
+function loginErr(e){const m=(e&&(e.message||e.msg||e.error_description))||"",st=e&&e.status;
+  if(/fetch|network|load failed/i.test(m))return"Engin tenging við Supabase. Athugaðu netið, og að slóðin í config.js sé rétt ("+CONFIG.url+").";
+  if(/invalid login credentials/i.test(m))return"Rangt netfang eða lykilorð.";
+  if(/email not confirmed/i.test(m))return"Netfangið er ekki staðfest. Í Supabase: eyddu notandanum og búðu hann til aftur með „Auto Confirm User“.";
+  if(/api key|apikey|jwt|unauthori[sz]ed|no api key/i.test(m)||st===401)return"Lykillinn í config.js er rangur. Notaðu anon / publishable lykilinn úr Supabase (Project Settings → API Keys). Villa: "+m;
+  if(/disabled|not enabled|provider/i.test(m))return"Innskráning með netfangi er óvirk. Í Supabase: Authentication → Sign In / Providers → Email → kveiktu á „Enable Email provider“. Villa: "+m;
+  if(/rate|too many/i.test(m)||st===429)return"Of margar tilraunir. Bíddu í nokkrar mínútur og reyndu aftur.";
+  return"Innskráning tókst ekki. Villa frá Supabase: "+(m||"óþekkt")+(st?" ("+st+")":"");}
 
 /* local cache + listeners, shaped like the store API the dashboard already uses */
 const cache={},listeners={},docListeners={};
@@ -1490,7 +1501,7 @@ saveFile=async(name,data)=>{
 };
 
 /* new version notice: compares this page's version with the one on the server */
-const APP_VERSION="v-20261120-151658";
+const APP_VERSION="v-20261124-153034";
 function showUpdate(){
   if($("updbar"))return;
   const d=document.createElement("div");d.id="updbar";d.setAttribute("role","status");
@@ -1539,7 +1550,7 @@ $("loginform").addEventListener("submit",async e=>{
   if(!em||!pw){$("lerr").textContent="Skráðu netfang og lykilorð.";$("lerr").hidden=false;return}
   $("lbtn").disabled=true;$("lerr").hidden=true;
   try{const r=await sb.auth.signInWithPassword({email:em,password:pw});
-    if(r.error||!r.data||!r.data.session){$("lerr").textContent=/fetch|network/i.test(r.error?.message||"")?"Engin tenging. Athugaðu netið og reyndu aftur.":"Rangt netfang eða lykilorð.";$("lerr").hidden=false;$("lbtn").disabled=false;return}
+    if(r.error||!r.data||!r.data.session){$("lerr").textContent=loginErr(r.error);$("lerr").hidden=false;$("lbtn").disabled=false;return}
     $("l_pw").value="";boot(r.data.session);
   }catch(err){$("lerr").textContent="Engin tenging. Athugaðu netið og reyndu aftur.";$("lerr").hidden=false;$("lbtn").disabled=false}
 });
